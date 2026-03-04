@@ -1,0 +1,39 @@
+nav {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    background: rgba(57, 57, 57, 1);
+    filter: drop-shadow(0px 1px 10px rgba(0,0,0,0.1));
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+nav ul{
+    display: flex;
+    list-style: none;
+    padding: auto;
+    flex-wrap: nowrap;
+    gap: 30px;
+    position: relative;
+}
+
+nav li{
+    color: rgba(255, 255, 255, 1);
+    font-family: "Oswald",sans-serif;
+}
+
+.sub-li {
+    padding: 0;
+    margin: 0;
+    list-style: none; /* or flex-direction: column; for vertical list */
+}
+
+.search-section {
+    border: 0.5px solid rgba(255, 255, 255, 0.3);
+    width: 152px;
+    height: 40px;
+    margin-left: auto;
+    margin-right: 30px;   /* ✅ THIS pushes it to the right */
+}
+/* Remove spacing between nested li items *
