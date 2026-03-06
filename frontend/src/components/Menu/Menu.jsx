@@ -4,23 +4,54 @@ const Menu=()=>{
     return(
         <nav>
             <ul>
-               <li>Home</li>
-               <li>International</li>
-               <li>Sports</li> 
-               <li>Opinion</li>
+               <li>
+                <Link to={""}>
+                    Home
+                </Link>
+               </li>
+               <li>
+                    <Link to={"/international"}>
+                        International
+                    </Link>
+               </li>
+               <li>
+                    <Link to={"/sports"}>
+                        Sports
+                    </Link>
+               </li>
+               <li>
+                    <Link to={"/opinion"}>
+                        Opinion
+                    </Link>
+               </li>
                <ul className="sub-li">
-                    <li>Business</li>
-                    <li>Youth</li>
-                    <li>Entertainment</li>
-                    <li>Lifestyle</li>
+                    <li>
+                    <Link to={"/business"}>
+                        Business
+                    </Link>
+                    </li>
+                    <li>
+                    <Link to={"/youth"}>
+                        Youth
+                    </Link>
+                    </li>
+                    <li>
+                    <Link to={"/entertainment"}>
+                        Entertainment
+                    </Link>
+                    </li>
+                    <li>
+                    <Link to={"/lifestyles"}>
+                        Lifestyles
+                    </Link>
+                    </li>
                     <li>Pages</li>
                 </ul>
             </ul>
-            <div className="search-section">
+            <input className="search-section" placeholder="Search for" type="text">
                 
-            </div>
+            </input>
         </nav>
-        
     )
 }
 

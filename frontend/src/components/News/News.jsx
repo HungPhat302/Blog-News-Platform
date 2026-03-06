@@ -1,8 +1,8 @@
-
+import "./News.css"
 
 const News=()=>{
     return(
-        <div>
+        <div className="">
             News
         </div>
     )

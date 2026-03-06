@@ -17,4 +17,20 @@
        margin-left: 0;      /* reset */
         align-self: flex-end;
     }
+
+    .container {
+        flex-direction: column; /* stack items vertically */
+        align-items: center; /* center items horizontally */
+    }
+
+    .banner-button {
+        width: 150px;
+        height: 40px;
+        transform: translateX(-125%);
+    }
+
+    .banner-button-text{
+        top: 10px;
+        left: 10px;
+    }
 }

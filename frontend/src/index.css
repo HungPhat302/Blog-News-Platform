@@ -35,3 +35,81 @@
   left: 135px;
 }
 
+.banner{
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  opacity: 1;
+  position: relative;
+  top: 0px;
+  left: 0px;
+  overflow: hidden;
+  margin-left: auto;
+  display: inline-block;
+  
+}
+
+.container {
+  display: flex; /* align children horizontally */
+  align-items: flex-start; /* align items vertically at the top */
+  justify-content: space-between; /* space out the children */
+  width: 100%; /* full width */
+  padding: 20px; /* optional padding */
+  box-sizing: border-box;
+  overflow: hidden; /* include padding in width calculation */
+}
+
+.banner-text {
+  width: 219px;
+  color: rgba(255,255,255,1);
+  position: absolute;
+  top: 16px;
+  left: 26px;
+  font-size: 14px;
+  opacity: 1;
+  text-align: left;
+}
+
+.banner-text-2 {
+  width: 116px;
+  color: rgba(246,80,80,1);
+  position: absolute;
+  top: 57px;
+  left: 26px;
+  font-family: Oswald;
+  font-weight: Regular;
+  font-size: 14px;
+  opacity: 1;
+  text-align: left;
+}
+
+.banner-button {
+  position: absolute; /* position relative to parent container */
+  bottom: 32px; /* small margin from bottom */
+  left: 85%; /* center horizontally */
+  transform: translateX(-50%); /* center the button */
+  width: 180px; /* fixed width, or use max-width for responsiveness */
+  height: 44px;
+  background: rgba(246,80,80,1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.banner-button-text {
+  width: 140px;
+  color: rgba(255,255,255,1);
+  position: absolute;
+  top: 13px;
+  left: 20px;
+  font-family: Sofia Pro;
+  font-weight: Bold;
+  font-size: 18px;
+  opacity: 1;
+  text-align: center;
+}
+
+
+
+
