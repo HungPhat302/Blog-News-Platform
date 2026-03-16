@@ -11,6 +11,32 @@ const postSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        slug: {
+            type: String,
+            required: true,
+            unique: true,
+        },
+        category: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Category",
+            required: true
+        },
+        tags: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Tag",
+                required: true
+            }
+        ],
+        image: {
+            type: String,
+            required: false,
+        },
+        status: {
+            type: String,
+            enum: ["draft", "review", "published"],
+            default: "draft"
+        },
         author: {
             type: String, 
             required: true,
