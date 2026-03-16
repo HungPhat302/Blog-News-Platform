@@ -1,0 +1,33 @@
+ .top-bar {
+    background-color: #fff;
+    border-bottom: 1px solid #eee;
+    font-size: 12px;
+    padding: 10px 0;
+}
+
+
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* 1. TOP BAR */
+.top-bar {
+    background-color: #fff;
+    border-bottom: 1px solid #eee;
+    font-size: 12px;
+    padding: 10px 0;
+}
+        
+.top-bar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+        
+.trending {
+    font-weight: bold;
+    margin-right: 15px;
+}

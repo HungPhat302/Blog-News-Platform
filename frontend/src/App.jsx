@@ -2,28 +2,27 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import {Menu,Footer,Popups, Category, News} from './components'
+import {Menu,Footer,Popups, Category, News, Recent} from './components'
 import { Route, Routes } from 'react-router-dom'
 function App() {
   return (
     <>
      <Popups/>
-     <div className='container'>
-        <div className='logo-container'>
-          <img src="src/assets/logo.png" width={247} height={62}></img>
-        </div>
-        <div className='banner'>
-          <img src='src/assets/images/banner.png' width={771} height={97}></img>
-          <div className='banner-button'>
-            <a href='' className='banner-button-text'>Purchase Now</a>
+      <header class="header">
+        <div class="container">
+          <div class="logo">
+            <img src="src/assets/logo.png" width={247} height={62} />
           </div>
-          <span className='banner-text'>Best Selling BLOG and MAGAZINE
-          Theme of All Time</span>
-          <span className='banner-text-2'>Experience the Change</span>
+          <div class="ad-banner">
+            <img src="src/assets/images/banner.png" width={771} height={97} />
+            <span className='banner-text'>Best Selling BLOG and MAGAZINE Theme of All Time</span>
+            <span className='banner-text2'>Experience the change!</span>
+          </div>
         </div>
-      </div>
+      </header>
      <Menu/>
      <News/>
+     <Category/>
      <Routes>
       {/* The Category is just a template for route handling.
        Add actual jsx component inside each element according to their route names */}

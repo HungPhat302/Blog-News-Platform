@@ -2,10 +2,12 @@
     nav {
         flex-direction: column;
         height: auto;
-        max-height: none;   /* IMPORTANT */
+        max-height: none;
+        /* IMPORTANT */
         width: 100%;
         padding: 10px;
-        background: rgba(57, 57, 57, 1); /* keep background */
+        background: rgba(57, 57, 57, 1);
+        /* keep background */
     }
 
     nav ul {
@@ -14,13 +16,16 @@
     }
 
     .search-section {
-       margin-left: 0;      /* reset */
+        margin-left: 0;
+        /* reset */
         align-self: flex-end;
     }
 
     .container {
-        flex-direction: column; /* stack items vertically */
-        align-items: center; /* center items horizontally */
+        flex-direction: column;
+        /* stack items vertically */
+        align-items: center;
+        /* center items horizontally */
     }
 
     .banner-button {
@@ -29,8 +34,96 @@
         transform: translateX(-125%);
     }
 
-    .banner-button-text{
+    .banner-button-text {
         top: 10px;
         left: 10px;
+    }
+
+    .banner-text {
+        top: 170px;
+        left: 50px;
+    }
+
+    .banner-text2 {
+        top: 210px;
+        left: 50px;
+    }
+
+    .news_1_text {
+        top: 1280px;
+        width: 55%;
+        /* or max-width: 100%; */
+    }
+
+    .news_1_2text {
+        top: 1250px;
+        width: 55%;
+    }
+
+
+    .news_2_text {
+        position: relative;
+        top: -22px;
+        left: -75px;
+        width: 25%;
+    }
+
+    .news_2_2text {
+        position: relative;
+        top: -80px;
+        left: -165px;
+        width: 25%;
+    }
+
+    .news_2_tag {
+        left: 400px;
+    }
+
+    .banner-button {
+        bottom: 456px;
+        left: 660px;
+    }
+
+
+    .hero-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: 300px 200px 200px;
+    }
+
+    .item-main {
+        grid-column: span 2;
+        grid-row: span 1;
+    }
+
+    .item-top-right {
+        grid-column: span 2;
+        grid-row: span 1;
+    }
+
+    .main-layout {
+        grid-template-columns: 1fr;
+    }
+
+
+    .header .container {
+        justify-content: center;
+    }
+
+    .ad-banner {
+        display: none;
+    }
+
+    /* Ẩn banner trên điện thoại cho gọn */
+    .hero-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, 200px);
+    }
+
+    .item-main,
+    .item-top-right,
+    .item-bottom-right-1,
+    .item-bottom-right-2 {
+        grid-column: span 1;
+        grid-row: span 1;
     }
 }
