@@ -25,11 +25,12 @@
   display:flex;
   flex-direction:column;
   gap:15px;
+  padding-top: 12px;
 }
 
 .recent-post{
   display:flex;
-  gap:12px;
+  gap:22px;
   align-items:center;
   padding-bottom:12px;
   border-bottom:1px solid #eee;
@@ -78,6 +79,7 @@
 .dont-miss-grid{
   display:flex;
   gap:20px;
+  margin-top: 30px;
 }
 
 .big-post img{

@@ -17,11 +17,10 @@ const Category=()=>{
             alt="post"
           />
 
-          <span className="tag">Business</span>
+
 
           <div className="post-info">
             <p className="meta">Craig Bator - 27 Dec 2020</p>
-
             <h3>
               Now Is the Time to Think About Your Small Business Success
             </h3>

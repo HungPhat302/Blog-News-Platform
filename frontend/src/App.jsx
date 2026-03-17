@@ -2,7 +2,7 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import {Menu,Footer,Popups, Category, News, Recent} from './components'
+import {Menu,Footer,Popups, Category, News, Recent, Entertainment, Sports, LifeStyle} from './components'
 import { Route, Routes } from 'react-router-dom'
 function App() {
   return (
@@ -21,12 +21,10 @@ function App() {
         </div>
       </header>
      <Menu/>
-     <News/>
-     <Category/>
      <Routes>
       {/* The Category is just a template for route handling.
        Add actual jsx component inside each element according to their route names */}
-      <Route path='' />
+      <Route path='/' element={[<News/>,<Category/>,<Entertainment/>,<Sports/>,<LifeStyle/>]} />
       <Route path='/international' element={<Category/>}/>
       <Route path='/sports' element={<Category/>}/>
       <Route path='/opinion' element={<Category/>}/>

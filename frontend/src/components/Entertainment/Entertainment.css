@@ -1,0 +1,123 @@
+.ent-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Arial', sans-serif;
+  padding: 20px;
+}
+
+/* Header & Navigation */
+.ent-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 20px;
+}
+
+.ent-title {
+  color: #e74c3c;
+  font-size: 1.5rem;
+  margin: 0;
+  padding-bottom: 5px;
+  border-bottom: 3px solid #e74c3c;
+}
+
+.nav-btn {
+  background: #f19090;
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.nav-btn.active {
+  background: #e74c3c;
+}
+
+/* Hero Section */
+.ent-hero {
+  position: relative;
+  height: 450px;
+  background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('hero-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+  margin-bottom: 30px;
+  color: white;
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  max-width: 700px;
+  margin: 15px 0;
+}
+
+.hero-divider {
+  width: 50px;
+  border: 1px solid #e74c3c;
+  margin: 15px 0;
+}
+
+.hero-excerpt {
+  font-size: 1.1rem;
+  max-width: 500px;
+  opacity: 0.9;
+}
+
+/* Badges */
+.badge {
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: white;
+}
+
+.badge-blue { background: #4a90e2; }
+.bollywood { background: #50e3c2; }
+.entertainment { background: #b8e986; }
+
+/* Grid Cards */
+.ent-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.ent-card {
+  display: flex;
+  gap: 15px;
+}
+
+.card-image-wrapper {
+  position: relative;
+  flex: 0 0 120px;
+}
+
+.card-img {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+}
+
+.badge-small {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  font-size: 0.6rem;
+}
+
+.card-meta {
+  font-size: 0.7rem;
+  color: #888;
+  margin: 0 0 5px 0;
+}
+
+.card-title {
+  font-size: 0.9rem;
+  margin: 0;
+  line-height: 1.4;
+  font-weight: bold;
+}
