@@ -9,4 +9,5 @@ import Sports from "./Sports/Sports";
 import Video from "./Video/Video";
 import Popups from "./Popups/Popups";
 import LifeStyle from "./Lifestyle/Lifestyle";
-export {Ad,Category,Entertainment,Footer,Menu,News,Recent,Sports,Video,Popups,LifeStyle}
+import UserForm from "./Forms/UserForm/UserForm";
+export {Ad,Category,Entertainment,Footer,Menu,News,Recent,Sports,Video,Popups,LifeStyle,UserForm}
