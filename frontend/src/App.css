@@ -127,3 +127,86 @@
         grid-row: span 1;
     }
 }
+
+
+
+
+
+
+
+/* --- RESPONSIVE BREAKPOINTS --- */
+
+/* 1. Tablet View (Typically < 992px) */
+@media (max-width: 992px) {
+  .ent-grid {
+    /* Reduce from 3 columns to 2 for better spacing */
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 15px;
+  }
+  
+  .hero-title {
+    font-size: 2rem; /* Shrink title slightly */
+  }
+}
+
+/* 2. Mobile View (Typically < 768px) */
+@media (max-width: 768px) {
+  .ent-header {
+    flex-direction: column; /* Stack Title and Nav buttons */
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .ent-hero {
+    height: auto; /* Let content determine height */
+    padding: 60px 20px;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .hero-title {
+    font-size: 1.6rem;
+    margin: 10px auto;
+  }
+
+  .hero-divider {
+    margin: 15px auto; /* Center the red accent line */
+  }
+
+  .hero-excerpt {
+    font-size: 0.95rem;
+    margin: 0 auto;
+  }
+
+  /* CRITICAL: The Responsive Grid */
+  .ent-grid {
+    grid-template-columns: 1fr; /* Single column stack */
+    gap: 25px;
+  }
+
+  .ent-card {
+    /* Increase height of images on mobile for better visibility */
+    align-items: center; 
+  }
+
+  .card-image-wrapper {
+    flex: 0 0 100px; /* Slightly smaller thumbnails on mobile */
+  }
+}
+
+/* 3. Small Mobile (Typically < 480px) */
+@media (max-width: 480px) {
+  .ent-card {
+    flex-direction: column; /* Optional: Stack the thumbnail ABOVE the text */
+    align-items: flex-start;
+  }
+
+  .card-image-wrapper {
+    width: 100%;
+    flex: none;
+  }
+
+  .card-img {
+    height: 180px; /* Larger image if stacked vertically */
+  }
+}

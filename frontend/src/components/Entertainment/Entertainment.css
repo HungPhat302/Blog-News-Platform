@@ -80,25 +80,33 @@
 .entertainment { background: #b8e986; }
 
 /* Grid Cards */
+/* Modified Grid to stack items in a single column */
 .ent-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr; /* Changed from repeat(3, 1fr) to 1fr */
   gap: 20px;
+  max-width: 800px; /* Optional: keeps the column from getting too wide on large screens */
 }
 
+/* Adjusting the card for a better list-view look */
 .ent-card {
   display: flex;
-  gap: 15px;
+  gap: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee; /* Adds a separator between list items */
+}
+
+.ent-card:last-child {
+  border-bottom: none;
 }
 
 .card-image-wrapper {
-  position: relative;
-  flex: 0 0 120px;
+  flex: 0 0 150px; /* Slightly larger image for a single-column layout */
 }
 
 .card-img {
   width: 100%;
-  height: 80px;
+  height: 100px; /* Increased height to match the larger width */
   object-fit: cover;
 }
 

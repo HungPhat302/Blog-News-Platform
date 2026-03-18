@@ -134,17 +134,19 @@
 /* Sidebar & Social */
 .social-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 10px;
   margin-bottom: 30px;
 }
 
 .social-box {
   color: white;
-  padding: 15px 10px;
-  font-size: 0.7rem;
+  padding: clamp(8px, 2vw, 15px); /* responsive padding */
+  font-size: clamp(0.6rem, 1.5vw, 0.8rem); /* responsive text */
   text-align: center;
-  border-radius: 3px;
+  border-radius: 10px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .fb { background: #3b5998; }
@@ -187,3 +189,48 @@
   gap: 12px; /* Adjust this number to increase/decrease distance */
   align-items: center;
 }
+
+.news-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Keeps text pushed to the top */
+  gap: 2px; /* Minimal gap between meta-data and title */
+}
+
+
+
+
+@media (max-width:768px) {
+  .news-item-title {
+  flex-shrink: 1;
+  min-width: 0px; /* Important for ellipsis */
+  width:45%;
+  }
+  .meta-data-small {
+    width: 42%;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .sports-page-container {
+    grid-template-columns: 1fr; /* stack into one column */
+  }
+  .social-grid {
+    grid-template-columns: 1fr; /* stack */
+  }
+
+  .social-box {
+    font-size: 0.95rem;
+    padding: -7px 5px;
+    width: 90%;
+  }
+  .sidebar {
+    order: 2; /* move sidebar below */
+  }
+
+  .sports-grid {
+    order: 1; /* main content stays on top */
+  }
+}
+

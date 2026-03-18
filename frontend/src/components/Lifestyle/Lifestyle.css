@@ -164,3 +164,20 @@
 .bg-light-blue { background: #20c997; }
 .bg-pink-alt { background: #fd7e14; }
 .bg-blue-alt { background: #0dcaf0; }
+
+
+
+
+
+
+@media (max-width: 768px) {
+  .lifestyle-layout {
+    grid-template-columns: 1fr; /* stack */
+    gap: 20px;
+    padding: 0 15px; /* prevent edge overflow */
+  }
+
+  .lifestyle-sidebar {
+    order: 2; /* move sidebar below content */
+  }
+}

@@ -55,9 +55,7 @@ const Entertainment=()=>{
           <div key={item.id} className="ent-card">
             <div className="card-image-wrapper">
               <img src={item.image} alt={item.title} className="card-img" />
-              <span className={`badge badge-small ${item.category.toLowerCase()}`}>
-                {item.category}
-              </span>
+              
             </div>
             <div className="card-content">
               <p className="card-meta">{item.author} - {item.date}</p>
