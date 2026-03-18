@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 
 const userSchema =  new mongoose.Schema({
+    username: {
+        type: String,
+        require: true,
+        unique: true,
+    },
     email: {
         type: String,
         required: true,
@@ -14,12 +19,16 @@ const userSchema =  new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ["user", "author", "editor", "admin"],
-        default: "user"
+        enum: ["reader", "author", "editor", "admin"],
+        default: "reader"
     },
     isActive: {
         type: Boolean,
         default: true
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
     },
     resetPasswordToken: String,
     resetPasswordExpire: Date
