@@ -14,4 +14,8 @@ router.delete("/users/:id", controller.deleteUser); //done
 router.patch("/users/:id/role", controller.updateRole);
 router.patch("/users/:id/status", controller.updateStatus); // have error
 
+router.post("/category", controller.createCategory); //done
+
+router.post("/tag", controller.createTag); //done
+
 module.exports = router;
