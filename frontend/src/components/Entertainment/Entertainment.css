@@ -39,7 +39,7 @@
 .ent-hero {
   position: relative;
   height: 450px;
-  background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('hero-bg.jpg');
+  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6)), url('hero-bg.jpg');
   background-size: cover;
   background-position: center;
   display: flex;
@@ -75,17 +75,29 @@
   color: white;
 }
 
-.badge-blue { background: #4a90e2; }
-.bollywood { background: #50e3c2; }
-.entertainment { background: #b8e986; }
+.badge-blue {
+  background: #4a90e2;
+}
+
+.bollywood {
+  background: #50e3c2;
+}
+
+.entertainment {
+  background: #b8e986;
+}
+
+.hollywood {
+  background: #888;
+}
 
 /* Grid Cards */
 /* Modified Grid to stack items in a single column */
 .ent-grid {
-  display: grid;
-  grid-template-columns: 1fr; /* Changed from repeat(3, 1fr) to 1fr */
-  gap: 20px;
-  max-width: 800px; /* Optional: keeps the column from getting too wide on large screens */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  /* Optional: keeps the column from getting too wide on large screens */
 }
 
 /* Adjusting the card for a better list-view look */
@@ -93,7 +105,7 @@
   display: flex;
   gap: 20px;
   padding-bottom: 20px;
-  border-bottom: 1px solid #eee; /* Adds a separator between list items */
+  /* Adds a separator between list items */
 }
 
 .ent-card:last-child {
@@ -101,12 +113,15 @@
 }
 
 .card-image-wrapper {
-  flex: 0 0 150px; /* Slightly larger image for a single-column layout */
+  position: relative;
+  flex: 0 0 150px;
+  /* Slightly larger image for a single-column layout */
 }
 
 .card-img {
   width: 100%;
-  height: 100px; /* Increased height to match the larger width */
+  height: 100px;
+  /* Increased height to match the larger width */
   object-fit: cover;
 }
 
@@ -128,4 +143,36 @@
   margin: 0;
   line-height: 1.4;
   font-weight: bold;
+}
+
+.badge {
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: white;
+}
+
+
+.badge-small {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-size: 0.6rem;
+  padding: 3px 6px;
+  border-radius: 3px;
+}
+
+
+@media (max-width:768px) {
+
+  .ent-grid {
+     display: grid;
+  grid-template-columns: 1fr;
+  /* Changed from repeat(3, 1fr) to 1fr */
+  gap: 20px;
+  max-width: 800px;
+  }
+  .ent-card {
+      border-bottom: 1px solid #eee;
+  }
 }

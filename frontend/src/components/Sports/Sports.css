@@ -246,7 +246,10 @@
   /* Minimal gap between meta-data and title */
 }
 
-
+.sidebar {
+  padding-left: 16px;
+  margin-right: -24px;
+}
 
 
 @media (max-width:768px) {
@@ -254,11 +257,14 @@
     flex-shrink: 1;
     min-width: 0px;
     /* Important for ellipsis */
-    width: 45%;
+    width: 100%;
   }
-
+  .sidebar {
+    padding-left: 0;
+    margin-right: 0;
+  }
   .meta-data-small {
-    width: 42%;
+    width: 100%;
   }
 
   .ad-box img {
