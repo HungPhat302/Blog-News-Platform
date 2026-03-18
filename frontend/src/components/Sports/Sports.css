@@ -23,7 +23,8 @@
   margin: 0;
   padding-bottom: 10px;
   border-bottom: 2px solid #e74c3c;
-  margin-bottom: -10px; /* Overlap the header border */
+  margin-bottom: -10px;
+  /* Overlap the header border */
 }
 
 /* Filter Navigation */
@@ -42,13 +43,33 @@
   border-radius: 2px;
 }
 
-.bg-red { background: #e74c3c; }
-.bg-purple { background: #9b59b6; }
-.bg-green { background: #58d68d; }
-.bg-blue { background: #3498db; }
-.bg-olive { background: #9a8c34; }
-.bg-light-blue { background: #5dade2; }
-.bg-indigo { background: #5d6dbe; }
+.bg-red {
+  background: #e74c3c;
+}
+
+.bg-purple {
+  background: #9b59b6;
+}
+
+.bg-green {
+  background: #58d68d;
+}
+
+.bg-blue {
+  background: #3498db;
+}
+
+.bg-olive {
+  background: #9a8c34;
+}
+
+.bg-light-blue {
+  background: #5dade2;
+}
+
+.bg-indigo {
+  background: #5d6dbe;
+}
 
 .arrow-btn {
   background: #f19090;
@@ -57,7 +78,9 @@
   padding: 5px 10px;
 }
 
-.arrow-btn.active { background: #e74c3c; }
+.arrow-btn.active {
+  background: #e74c3c;
+}
 
 /* Main Grid Layout */
 .sports-grid {
@@ -96,9 +119,12 @@
 .meta-data-small {
   color: #888;
   font-size: 0.75rem;
-  margin: 0 0 2px 0; /* Removed top margin, kept a tiny bottom margin */
-  line-height: 1;    /* Tightens the text height */
+  margin: 0 0 2px 0;
+  /* Removed top margin, kept a tiny bottom margin */
+  line-height: 1;
+  /* Tightens the text height */
 }
+
 .featured-title {
   font-size: 1.4rem;
   line-height: 1.3;
@@ -141,20 +167,39 @@
 
 .social-box {
   color: white;
-  padding: clamp(8px, 2vw, 15px); /* responsive padding */
-  font-size: clamp(0.6rem, 1.5vw, 0.8rem); /* responsive text */
+  padding: clamp(8px, 2vw, 15px);
+  /* responsive padding */
+  font-size: clamp(0.6rem, 1.5vw, 0.8rem);
+  /* responsive text */
   text-align: center;
   border-radius: 10px;
   width: 100%;
   box-sizing: border-box;
 }
 
-.fb { background: #3b5998; }
-.ig { background: #ac2bac; }
-.yt { background: #c64d3e; }
-.tw { background: #55acee; }
-.be { background: #0057ff; }
-.db { background: #ea4c89; }
+.fb {
+  background: #3b5998;
+}
+
+.ig {
+  background: #ac2bac;
+}
+
+.yt {
+  background: #c64d3e;
+}
+
+.tw {
+  background: #55acee;
+}
+
+.be {
+  background: #0057ff;
+}
+
+.db {
+  background: #ea4c89;
+}
 
 .ad-box {
   position: relative;
@@ -178,7 +223,8 @@
 }
 
 .news-item-title {
-  margin: 0;         /* Completely removed top and bottom margins */
+  margin: 0;
+  /* Completely removed top and bottom margins */
   font-size: 0.95rem;
   line-height: 1.3;
   font-weight: 600;
@@ -186,15 +232,18 @@
 
 .filter-buttons {
   display: flex;
-  gap: 12px; /* Adjust this number to increase/decrease distance */
+  gap: 12px;
+  /* Adjust this number to increase/decrease distance */
   align-items: center;
 }
 
 .news-info {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* Keeps text pushed to the top */
-  gap: 2px; /* Minimal gap between meta-data and title */
+  justify-content: flex-start;
+  /* Keeps text pushed to the top */
+  gap: 2px;
+  /* Minimal gap between meta-data and title */
 }
 
 
@@ -202,35 +251,59 @@
 
 @media (max-width:768px) {
   .news-item-title {
-  flex-shrink: 1;
-  min-width: 0px; /* Important for ellipsis */
-  width:45%;
+    flex-shrink: 1;
+    min-width: 0px;
+    /* Important for ellipsis */
+    width: 45%;
   }
+
   .meta-data-small {
     width: 42%;
+  }
+
+  .ad-box img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .filter-nav {
+    width: 100%;
+    justify-content: space-between;
   }
 }
 
 
 @media (max-width: 768px) {
   .sports-page-container {
-    grid-template-columns: 1fr; /* stack into one column */
+    grid-template-columns: 1fr;
+    /* stack into one column */
   }
+
   .social-grid {
-    grid-template-columns: 1fr; /* stack */
+    grid-template-columns: 1fr;
+    /* stack */
   }
 
   .social-box {
     font-size: 0.95rem;
     padding: -7px 5px;
-    width: 90%;
+    width: 100%;
   }
+
   .sidebar {
-    order: 2; /* move sidebar below */
+    order: 2;
+    /* move sidebar below */
   }
 
   .sports-grid {
-    order: 1; /* main content stays on top */
+    order: 1;
+    /* main content stays on top */
   }
 }
-
