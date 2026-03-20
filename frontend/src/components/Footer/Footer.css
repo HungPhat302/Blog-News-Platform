@@ -1,0 +1,211 @@
+.gallery-thumb:hover {
+  opacity: 0.8;
+  /* Subtle feedback when hovering */
+}
+
+/* --- 1. Main Layout Containers --- */
+.footer-container {
+  width: 100%;
+  min-height: 355px;
+  position: relative;
+  background: #393239;
+  display: flex;
+  justify-content: center;
+  padding: 60px 0;
+}
+
+.footer-decorate {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(57, 50, 57, 1);
+  z-index: 1;
+}
+
+.footer-content-wrapper {
+  width: 90%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+  z-index: 2;
+}
+
+.footer-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  /* This allows the absolute gallery inside to work */
+  min-width: 270px;
+}
+
+/* --- 2. Photo Gallery (Your requested structure) --- */
+.footer-gallery {
+  width: 270px;
+  height: 223px;
+  position: relative;
+  /* CHANGE: Removed 'margin: 0 auto' so it aligns left with other columns */
+  margin: 0; 
+}
+
+/* We leave these exactly as you defined them */
+.photo-gallery-1,
+.photo-gallery-2,
+.photo-gallery-3,
+.photo-gallery-4,
+.photo-gallery-5,
+.photo-gallery-6 {
+  width: 85px;
+  height: 85px;
+  position: absolute;
+  overflow: hidden;
+  background: rgba(196, 196, 196, 1);
+}
+
+/* Keeping your exact coordinates */
+.photo-gallery-1 {
+  top: 47px;
+  left: 0px;
+}
+
+.photo-gallery-2 {
+  top: 138px;
+  left: 0px;
+}
+
+.photo-gallery-3 {
+  top: 47px;
+  left: 92px;
+}
+
+.photo-gallery-4 {
+  top: 138px;
+  left: 92px;
+}
+
+.photo-gallery-5 {
+  top: 47px;
+  left: 184px;
+}
+
+.photo-gallery-6 {
+  top: 138px;
+  left: 184px;
+}
+
+.footer-gallery-title {
+  width: 174px;
+  color: white;
+  position: absolute;
+  top: 10px;
+  left: 0px;
+  font-family: Oswald;
+  font-size: 24px;
+}
+
+.gallery-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --- 3. Branding & Subscription (Cleaned up positioning) --- */
+.footer-logo {
+  width: 247px;
+  height: 62px;
+  background: url("src/assets/logo.png") no-repeat center / contain;
+  margin-bottom: 20px;
+}
+
+.footer-text {
+  color: white;
+  font-family: "Sofia Pro", sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  max-width: 270px;
+}
+
+.email-list-title {
+  color: white;
+  font-family: "Oswald", sans-serif;
+  font-size: 24px;
+  margin-top: 17px;
+  /* Matches gallery title top: 10px */
+  margin-bottom: 0;
+  line-height: 1;
+}
+
+/* Match the '47px' top offset where the images start */
+.email-list-text {
+  color: white;
+  font-family: "Sofia Pro", sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  max-width: 270px;
+  margin-top: 13px;
+  /* Title(10px) + Title height + 13px gap ≈ 47px offset */
+  margin-bottom: 0;
+}
+
+.email-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+  /* Spacing between text and input */
+}
+
+.email-list-input,
+.email-list-button {
+  width: 270px;
+  height: 40px;
+  border: none;
+  border-radius: 4px;
+  font-family: "Sofia Pro", sans-serif;
+}
+
+.email-list-input {
+  padding: 0 15px;
+  box-sizing: border-box;
+  background-color: #ffffff; /* Sets background to white */
+  color: #333333;            /* Sets typing text color to dark grey */
+  outline: none;
+}
+
+.email-list-button {
+  background: #f65050;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.email-list-button:hover {
+  background: #e04545;
+}
+
+/* --- 4. RESPONSIVE LOGIC --- */
+@media (max-width: 1024px) {
+  .footer-content-wrapper {
+    flex-direction: column;
+    /* This makes it a column! */
+    align-items: center;
+    text-align: center;
+    gap: 60px;
+  }
+
+  .footer-column {
+    align-items: center;
+  }
+
+  .footer-gallery-title {
+    left: 50%;
+    transform: translateX(-50%);
+    /* Centers the title on mobile */
+  }
+}
