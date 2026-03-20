@@ -1,0 +1,395 @@
+/* Container Layout */
+.article-page-container {
+  display: flex;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  gap: 40px;
+  font-family: 'Inter', sans-serif;
+  color: #333;
+}
+
+/* Main Content */
+.main-article-content {
+  flex: 2;
+}
+
+.article-breadcrumbs {
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 20px;
+}
+
+.active-crumb {
+  color: #f65050;
+}
+
+.article-headline {
+  font-family: 'Playfair Display', serif; /* Or similar Serif font */
+  font-size: 42px;
+  line-height: 1.2;
+  margin-bottom: 25px;
+}
+
+/* Author Section */
+.author-metadata {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.author-avatar {
+  width: 40px;
+  height: 40px;
+  background-color: #f0f0f0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+  color: #555;
+}
+
+.author-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.author-name {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.publish-date {
+  font-size: 13px;
+  color: #999;
+}
+
+/* Article Body */
+.article-body p {
+  font-size: 17px;
+  line-height: 1.7;
+  margin-bottom: 20px;
+  color: #444;
+}
+
+.article-figure {
+  margin: 30px 0;
+}
+
+.article-hero-img, .article-body-img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.img-caption {
+  font-size: 13px;
+  color: #888;
+  margin-top: 10px;
+}
+
+.article-quote {
+  font-style: italic;
+  font-size: 20px;
+  border-left: 4px solid #f65050;
+  padding-left: 20px;
+  margin: 30px 0;
+  color: #222;
+}
+
+/* Sidebar Styles */
+.article-sidebar {
+  flex: 1;
+  min-width: 300px;
+}
+
+.sidebar-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 18px;
+  margin-bottom: 20px;
+  position: relative;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.sidebar-title::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background-color: #f65050;
+}
+
+.trending-item {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.trending-thumb {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.category-tag {
+  font-size: 10px;
+  font-weight: 800;
+  color: #777;
+  letter-spacing: 1px;
+}
+
+.trending-headline {
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+/* Ad Box */
+.ad-placeholder {
+  background-color: #f9f9f9;
+  padding: 20px;
+  text-align: center;
+  border: 1px solid #eee;
+  margin: 30px 0;
+}
+
+.ad-label {
+  font-size: 12px;
+  color: #bbb;
+  display: block;
+  margin-bottom: 15px;
+}
+
+.ad-box-article {
+  width: 250px;
+  height: 200px;
+  border: 1px dashed #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  color: #999;
+}
+
+/* Related Articles */
+.related-articles-list {
+  list-style: none;
+  padding: 0;
+}
+
+.related-articles-list li {
+  font-size: 14px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.related-articles-list li:hover {
+  color: #f65050;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .article-page-container {
+    flex-direction: column;
+  }
+  .article-sidebar {
+    width: 100%;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* --- Comments Section Container --- */
+.comments-section {
+  max-width: 800px; /* Optional, centralize it */
+  margin: 40px auto 0 auto; /* Added top margin and centralization */
+  padding: 0 20px; /* Add some padding if needed */
+}
+
+/* --- Comments Header --- */
+.comments-header {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Spacing between icon and text */
+  margin-bottom: 25px;
+}
+
+.comments-icon {
+  font-size: 1.8rem;
+  color: #333; /* Dark color for icon */
+}
+
+.comments-title {
+  font-family: 'Playfair Display', serif; /* Or similar serif font to match article content */
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+/* --- Comment Form --- */
+.comment-form {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px; /* Rounded corners for form container */
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Optional subtle shadow */
+}
+
+.comment-textarea {
+  width: 100%;
+  height: 120px; /* Set a default height */
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 15px;
+  font-family: inherit;
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 15px;
+  resize: vertical; /* Allow user to resize height */
+  transition: border-color 0.2s;
+}
+
+.comment-textarea:focus {
+  border-color: #f65050; /* Primary/accent color from main image for focus */
+  outline: none;
+}
+
+.comment-textarea::placeholder {
+  color: #a0a0a0; /* Placeholder text color */
+}
+
+.comment-form-actions {
+  display: flex;
+  justify-content: flex-end; /* Align button to the right */
+}
+
+.post-comment-btn {
+  background-color: #000; /* Black button */
+  color: #fff; /* White text */
+  border: none;
+  border-radius: 6px;
+  padding: 12px 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.post-comment-btn:hover {
+  background-color: #333; /* Darker grey on hover */
+}
+
+/* --- Comments List & Item --- */
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Gap between comments */
+}
+
+.comment-item {
+  display: flex;
+  gap: 20px;
+  padding: 20px 0;
+  border-bottom: 1px solid #eee; /* Separator line */
+}
+
+.comment-item:last-child {
+  border-bottom: none; /* Remove border on last comment */
+}
+
+/* --- Avatar --- */
+.comment-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%; /* Circle */
+  background-color: #f0f0f0; /* Light grey background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #555; /* Neutral text color */
+}
+
+/* --- Details & Meta --- */
+.comment-details {
+  flex: 1; /* Take remaining width */
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Spacing between meta, text, actions */
+}
+
+.comment-author-meta {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.comment-author-meta strong {
+  font-weight: bold;
+  color: #333;
+}
+
+.comment-separator {
+  margin: 0 8px; /* Spacing around separator dot */
+  color: #ccc;
+}
+
+.comment-date {
+  color: #888; /* Grey date color */
+}
+
+/* --- Comment Text --- */
+.comment-text {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #444; /* Body text color */
+}
+
+/* --- Actions (Reply, Likes) --- */
+.comment-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Spacing between actions */
+  font-size: 0.9rem;
+  margin-top: 5px; /* Spacing from comment text */
+}
+
+.comment-reply-link {
+  text-decoration: none;
+  color: #3b5998; /* Example link color, or match existing site style */
+  font-weight: bold;
+}
+
+.comment-reply-link:hover {
+  text-decoration: underline;
+}
+
+.comment-likes {
+  color: #888; /* Grey likes color */
+}

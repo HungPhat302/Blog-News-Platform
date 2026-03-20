@@ -1,16 +1,22 @@
 import "./Footer.css"
-
-const Footer=()=>{
-    return(
+import bannerImage from "../../assets/images/banner.png";
+import logoImage from "../../assets/logo.png"
+const Footer = () => {
+    return (
         <footer className="footer-container">
             <div className="footer-decorate"></div>
 
             <div className="footer-content-wrapper">
-                {/* Column 1: Branding */}
                 <div className="footer-column">
-                    <div className="footer-logo"></div>
+                    {/* Now using an actual img tag with a specific class */}
+                    <img
+                        src={logoImage}
+                        className="footer-logo-img"
+                        alt="Company Logo"
+                    />
+
                     <p className="footer-text">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                         Neque, pellentesque dictum posuere id diam rutrum.
                     </p>
                 </div>
@@ -20,22 +26,22 @@ const Footer=()=>{
                     <div className="footer-gallery">
                         <span className="footer-gallery-title">Photo Gallery</span>
                         <div className="photo-gallery-1">
-                            <img src="src/assets/images/banner.png" className="gallery-thumb" />
+                            <img src={bannerImage} className="gallery-thumb" />
                         </div>
                         <div className="photo-gallery-2">
-                            <img src="src/assets/images/banner.png" className="gallery-thumb" />
+                            <img src={bannerImage} className="gallery-thumb" />
                         </div>
                         <div className="photo-gallery-3">
-                            <img src="src/assets/images/banner.png" className="gallery-thumb" />
+                            <img src={bannerImage} className="gallery-thumb" />
                         </div>
                         <div className="photo-gallery-4">
-                            <img src="src/assets/images/banner.png" className="gallery-thumb" />
+                            <img src={bannerImage} className="gallery-thumb" />
                         </div>
                         <div className="photo-gallery-5">
-                            <img src="src/assets/images/banner.png" className="gallery-thumb" />
+                            <img src={bannerImage} className="gallery-thumb" />
                         </div>
                         <div className="photo-gallery-6">
-                            <img src="src/assets/images/banner.png" className="gallery-thumb" />
+                            <img src={bannerImage} className="gallery-thumb" />
                         </div>
                     </div>
                 </div>

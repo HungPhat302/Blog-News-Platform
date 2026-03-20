@@ -3,6 +3,7 @@ import "./Entertainment.css"
 
 const articles = [
   {
+    id: 1,
     category: "Hollywood",
     title: "Amanda Seyfried became ‘really obsessed’ with ghost stories",
     author: "Craig Bator",
@@ -10,6 +11,7 @@ const articles = [
     image: "src/assets/images/banner.png",
   },
   {
+    id: 2,
     category: "Bollywood",
     title: "Irrfan Khan’s Last film “The Song of Scorpions” to release in 2021",
     author: "Craig Bator",
@@ -17,6 +19,7 @@ const articles = [
     image: "src/assets/images/banner.png",
   },
   {
+    id: 3,
     category: "Entertainment",
     title: "Apee Karim blessed with a daughter",
     author: "Craig Bator",

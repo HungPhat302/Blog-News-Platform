@@ -34,13 +34,39 @@
   z-index: 2;
 }
 
+/* The specific class for the image component */
+.footer-logo-img {
+    /* Maintain the exact dimensions */
+    width: 247px;
+    height: 62px;
+    
+    /* Replicates 'background-size: contain' */
+    object-fit: contain;
+    
+    /* Replicates 'background-position: center' */
+    /* Change to 'left' if you want it flush with the text */
+    object-position: center; 
+    
+    /* Preserve the spacing to the text below */
+    margin-bottom: 20px;
+    
+    /* Ensures the image behaves as a block in the flex column */
+    display: block;
+}
+
+.footer-text {
+    color: white;
+    font-family: "Sofia Pro", sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 270px;
+}
+
 .footer-column {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  /* This allows the absolute gallery inside to work */
-  min-width: 270px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 270px;
 }
 
 /* --- 2. Photo Gallery (Your requested structure) --- */
@@ -111,22 +137,6 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-/* --- 3. Branding & Subscription (Cleaned up positioning) --- */
-.footer-logo {
-  width: 247px;
-  height: 62px;
-  background: url("src/assets/logo.png") no-repeat center / contain;
-  margin-bottom: 20px;
-}
-
-.footer-text {
-  color: white;
-  font-family: "Sofia Pro", sans-serif;
-  font-size: 14px;
-  line-height: 1.6;
-  max-width: 270px;
 }
 
 .email-list-title {

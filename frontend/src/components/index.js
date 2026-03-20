@@ -9,5 +9,8 @@ import Sports from "./Sports/Sports";
 import Video from "./Video/Video";
 import Popups from "./Popups/Popups";
 import LifeStyle from "./Lifestyle/Lifestyle";
-import UserForm from "./Forms/UserForm/UserForm";
-export {Ad,Category,Entertainment,Footer,Menu,News,Recent,Sports,Video,Popups,LifeStyle,UserForm}
+import RegisterForm from "./Forms/Register/RegisterForm";
+import Article from "./Article/Article";
+import Logo from "./Logo/Logo";
+import LoginForm from "./Forms/Login/LoginForm";
+export {Ad,Category,Entertainment,Footer,Menu,News,Recent,Sports,Video,Popups,LifeStyle,RegisterForm,Article,Logo,LoginForm}
