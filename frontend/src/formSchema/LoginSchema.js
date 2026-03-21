@@ -9,8 +9,23 @@ const LoginSchema = Joi.object().keys({
         .required(),
 
     email: Joi.string()
-        .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
-        .required(),
+        .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net',] } }) // This is validation regarding Top Level Domain of a domain name (com,net,...)
+        .required() 
+        .custom((value, helpers) => {
+            const allowedDomains = ["gmail", "yahoo", "company"]; //This is validation regarding the name of the domain name (gmail,yahoo,...)
+
+            const [, domainPart] = value.split("@");
+            const domainName = domainPart.split(".")[0];
+
+            if (!allowedDomains.includes(domainName)) {
+                return helpers.error("email.domain");
+            }
+
+            return value;
+        })
+        .messages({
+            "email.domain": "This email domain is not allowed",
+        }),
 
     password: Joi.string()
         .alphanum()

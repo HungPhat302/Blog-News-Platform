@@ -41,7 +41,7 @@ const RegisterForm = () => {
             {...register('username')}
             type="text"
             id="username"
-            placeholder="yourname@example.com"
+            placeholder="username"
           />
           {
             errors.username && (
@@ -81,6 +81,25 @@ const RegisterForm = () => {
             )
           }
         </div>
+
+
+          <div className="input-group">
+          <label htmlFor="user-email">Password Confirm</label>
+          <input
+            {...register('password_confirm')}
+            type="password"
+            id="password_confirm"
+            placeholder="123456"
+          />
+          {
+            errors.password_confirm && (
+              <div>{`${errors.password_confirm.message}`}</div>
+            )
+          }
+        </div>
+
+
+
 
         <button type="submit" className="form-btn-submit">
           Register

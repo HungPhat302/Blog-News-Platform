@@ -16,7 +16,7 @@ const LoginForm = () => {
   });
   const { register, handleSubmit, formState: { errors, isSubmitting, isSubmitSuccessful }, reset } = useForm({
     resolver: joiResolver(LoginSchema),
-    mode: "onChange",
+    mode: "onSubmit",
     shouldFocusError: true
   })
   const onSubmit = async (data) => {
