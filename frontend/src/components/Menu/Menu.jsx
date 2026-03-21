@@ -5,7 +5,7 @@ const Menu=()=>{
         <nav>
             <ul>
                <li>
-                <Link to={""}>
+                <Link to={"/"}>
                     Home
                 </Link>
                </li>
