@@ -28,9 +28,9 @@ const articles = [
   },
 ];
 
-const Entertainment=()=>{
-    return(
-     <section className="ent-container">
+const Entertainment = () => {
+  return (
+    <section className="ent-container">
       {/* Header Section */}
       <div className="ent-header">
         <h2 className="ent-title">Entertainment</h2>
@@ -41,16 +41,29 @@ const Entertainment=()=>{
       </div>
 
       {/* Hero Featured Article */}
-      <div className="ent-hero">
-        <div className="ent-hero-overlay">
-          <span className="badge badge-blue">Hollywood</span>
-          <h1 className="hero-title">Amanda Seyfried became 'really obsessed' with ghost stories</h1>
-          <hr className="hero-divider" />
-          <p className="hero-excerpt">
-            Hollywood actress Amanda Seyfried has recalled the time when she became obsessed with ghost stories
-          </p>
+      <section className="ent-hero-container">
+        {/* 1. The actual background image */}
+        <img
+          src="hero-bg.jpg"
+          className="ent-hero-image"
+          alt="Amanda Seyfried"
+        />
+
+        {/* 2. The gradient layer (replicates your linear-gradient) */}
+        <div className="ent-hero-gradient"></div>
+
+        {/* 3. The content layer (handles the flexbox and text) */}
+        <div className="ent-hero-content">
+          <div className="ent-hero-overlay">
+            <span className="badge badge-blue">Hollywood</span>
+            <h1 className="hero-title">Amanda Seyfried became 'really obsessed' with ghost stories</h1>
+            <hr className="hero-divider" />
+            <p className="hero-excerpt">
+              Hollywood actress Amanda Seyfried has recalled the time when she became obsessed with ghost stories
+            </p>
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* Bottom Grid Section */}
       <div className="ent-grid">
@@ -70,7 +83,7 @@ const Entertainment=()=>{
         ))}
       </div>
     </section>
-    )
+  )
 }
 
 export default Entertainment

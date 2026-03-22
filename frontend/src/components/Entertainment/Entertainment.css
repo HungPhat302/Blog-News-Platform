@@ -36,18 +36,7 @@
 }
 
 /* Hero Section */
-.ent-hero {
-  position: relative;
-  height: 450px;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6)), url('hero-bg.jpg');
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  align-items: center;
-  padding: 0 40px;
-  margin-bottom: 30px;
-  color: white;
-}
+
 
 .hero-title {
   font-size: 2.5rem;
@@ -175,4 +164,106 @@
   .ent-card {
       border-bottom: 1px solid #eee;
   }
+}
+
+
+
+
+
+
+
+/* The Main Wrapper: Handles height, margins, and positioning context */
+.ent-hero-container {
+  position: relative;
+  height: 450px;
+  margin-bottom: 30px;
+  overflow: hidden; /* Ensures image doesn't bleed out */
+  display: flex;
+  align-items: center; /* Vertical centering */
+}
+
+/* The Image Class: Replicates 'background-size: cover' */
+.ent-hero-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* This is the magic for background-style images */
+  object-position: center;
+  z-index: -2; /* Keeps it behind everything */
+}
+
+/* The Gradient Class: Replicates the CSS linear-gradient */
+.ent-hero-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6));
+  z-index: -1; /* Sits on top of image, but under text */
+}
+
+/* The Content Layer: Handles the padding and text color */
+.ent-hero-content {
+  position: relative;
+  z-index: 1; /* Ensures text is on top and interactive */
+  width: 100%;
+  padding: 0 40px;
+  color: white;
+}
+
+/* Your existing inner styles remain the same */
+.hero-title {
+  font-size: 32px;
+  font-weight: bold;
+  max-width: 600px;
+}
+
+
+.ent-hero-overlay {
+  display: flex;
+  flex-direction: column;
+  max-width: 780px; /* Prevents text from spanning too wide */
+  text-align: left;
+  animation: fadeIn 0.8s ease-out; /* Optional: adds a smooth entrance */
+}
+
+/* Managing the space between elements */
+.ent-hero-overlay .badge {
+  margin-bottom: 1.2rem;
+  width: fit-content;
+}
+
+.ent-hero-overlay .hero-title {
+  font-family: "Sofia Pro", sans-serif;
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 0 0 1rem 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.ent-hero-overlay .hero-divider {
+  width: 60px;
+  height: 4px;
+  background-color: #ffffff;
+  border: none;
+  margin: 0 0 1.5rem 0;
+  opacity: 0.9;
+}
+
+.ent-hero-overlay .hero-excerpt {
+  font-family: "Sofia Pro", sans-serif;
+  font-size: 18px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.95);
+  max-width: 600px; /* Slightly narrower than the title for better visual flow */
+}
+
+/* Entrance animation for a premium feel */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
