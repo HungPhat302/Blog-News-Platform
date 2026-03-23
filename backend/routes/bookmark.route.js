@@ -5,7 +5,7 @@ const { allowRoles } = require("../middlewares/rbac.middleware");
 
 const router = express.Router();
 
-// router.get("/:userid", controller.getAllBookmarks);
+router.get("/", verifyToken, allowRoles("reader", "author"), controller.getAllBookmark);
 router.post("/:postid", verifyToken, allowRoles("reader", "author"), controller.saveBookmark);
 router.delete("/:bookmarkid", verifyToken, allowRoles("reader", "author"), controller.removeBookmark);
 

@@ -1,5 +1,29 @@
 const Bookmark = require("../models/Bookmark.model");
 
+exports.getAllBookmark = async (req, res) => {
+    try {
+        const userid = req.user.userId;
+
+        if (!userid) {
+            return res.status(400).json({
+                message: "Bad request"
+            });
+        }
+
+        const bookmarks = await Bookmark.find({ user: userid });
+
+        return res.status(200).json({
+            message: "Get your bookmarks successfully",
+            data: bookmarks
+        })
+    } catch(error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Internal server error"
+        });
+    }
+}
+
 exports.saveBookmark = async (req, res) => {
     try {
         const { postid } = req.params;
