@@ -192,3 +192,133 @@ label {
 .input-content::placeholder {
   color: #bbb;
 }
+
+
+/* Target the select when it has the multiple attribute */
+select.input-field[multiple] {
+  padding: 10px;
+  min-height: 120px; /* Gives enough room to see options */
+  background-image: none; /* Removes the default dropdown arrow */
+  cursor: pointer;
+}
+
+/* Style the individual options */
+select.input-field[multiple] option {
+  padding: 8px 12px;
+  margin-bottom: 2px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+}
+
+/* Style for when an option is hovered or focused */
+select.input-field[multiple] option:hover {
+  background-color: #f9f9f9;
+}
+
+/* Note: Styling the blue 'selected' color is limited in pure CSS, 
+   but we can style the focus of the whole box */
+select.input-field[multiple]:focus {
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+}
+
+/* Error Message Styling */
+.error-message {
+  color: #e74c3c;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.error-message::before {
+  content: '⚠️';
+  font-size: 0.9rem;
+}
+
+
+select.input-field {
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  appearance: none; /* remove default arrow */
+  background-color: #fff;
+  cursor: pointer;
+}
+
+
+.image-upload-placeholder.dragging {
+  border-color: #f65050;
+  background-color: rgba(246, 80, 80, 0.05);
+  color: #f65050;
+}
+
+
+
+.hidden-file-input {
+  display: none;
+}
+
+.file-display {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 13px;
+  color: #555;
+  text-align: left;
+}
+
+
+.image-preview {
+  margin-top: 10px;
+}
+
+.image-preview img {
+  width: 100%;
+  max-height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.remove-image {
+  margin-top: 8px;
+  background: #fff;
+  border: 1px solid #f65050;
+  color: #f65050;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.remove-image:hover {
+  background: #f65050;
+  color: #fff;
+}
+
+
+
+
+
+/* Add custom arrow */
+
+@media (max-width: 768px) {
+  .editor-form {
+    grid-template-columns: 1fr;
+  }
+
+  .editor-sidebar {
+    margin-top: 20px;
+  }
+
+  select.input-field[multiple] {
+    max-height: 120px;
+  }
+}
