@@ -1,42 +1,212 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column;
+        height: auto;
+        max-height: none;
+        /* IMPORTANT */
+        width: 100%;
+        padding: 10px;
+        background: rgba(57, 57, 57, 1);
+        /* keep background */
+    }
+
+    nav ul {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .search-section {
+        margin-left: 0;
+        /* reset */
+        align-self: flex-end;
+    }
+
+    .container {
+        flex-direction: column;
+        /* stack items vertically */
+        align-items: center;
+        /* center items horizontally */
+    }
+
+    .banner-button {
+        width: 150px;
+        height: 40px;
+        transform: translateX(-125%);
+    }
+
+    .banner-button-text {
+        top: 10px;
+        left: 10px;
+    }
+
+    .banner-text {
+        top: 170px;
+        left: 50px;
+    }
+
+    .banner-text2 {
+        top: 210px;
+        left: 50px;
+    }
+
+    .news_1_text {
+        top: 1280px;
+        width: 55%;
+        /* or max-width: 100%; */
+    }
+
+    .news_1_2text {
+        top: 1250px;
+        width: 55%;
+    }
+
+
+    .news_2_text {
+        position: relative;
+        top: -22px;
+        left: -75px;
+        width: 25%;
+    }
+
+    .news_2_2text {
+        position: relative;
+        top: -80px;
+        left: -165px;
+        width: 25%;
+    }
+
+    .news_2_tag {
+        left: 400px;
+    }
+
+    .banner-button {
+        bottom: 456px;
+        left: 660px;
+    }
+
+
+    .hero-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: 300px 200px 200px;
+    }
+
+    .item-main {
+        grid-column: span 2;
+        grid-row: span 1;
+    }
+
+    .item-top-right {
+        grid-column: span 2;
+        grid-row: span 1;
+    }
+
+    .main-layout {
+        grid-template-columns: 1fr;
+    }
+
+
+    .header .container {
+        justify-content: center;
+    }
+
+    .ad-banner {
+        display: none;
+    }
+
+    /* Ẩn banner trên điện thoại cho gọn */
+    .hero-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, 200px);
+    }
+
+    .item-main,
+    .item-top-right,
+    .item-bottom-right-1,
+    .item-bottom-right-2 {
+        grid-column: span 1;
+        grid-row: span 1;
+    }
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+
+
+
+
+
+/* --- RESPONSIVE BREAKPOINTS --- */
+
+/* 1. Tablet View (Typically < 992px) */
+@media (max-width: 992px) {
+  .ent-grid {
+    /* Reduce from 3 columns to 2 for better spacing */
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 15px;
   }
-  to {
-    transform: rotate(360deg);
+  
+  .hero-title {
+    font-size: 2rem; /* Shrink title slightly */
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+/* 2. Mobile View (Typically < 768px) */
+@media (max-width: 768px) {
+  .ent-header {
+    flex-direction: column; /* Stack Title and Nav buttons */
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .ent-hero {
+    height: auto; /* Let content determine height */
+    padding: 60px 20px;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .hero-title {
+    font-size: 1.6rem;
+    margin: 10px auto;
+  }
+
+  .hero-divider {
+    margin: 15px auto; /* Center the red accent line */
+  }
+
+  .hero-excerpt {
+    font-size: 0.95rem;
+    margin: 0 auto;
+  }
+
+  /* CRITICAL: The Responsive Grid */
+  .ent-grid {
+    grid-template-columns: 1fr; /* Single column stack */
+    gap: 25px;
+  }
+
+  .ent-card {
+    /* Increase height of images on mobile for better visibility */
+    align-items: center; 
+  }
+
+  .card-image-wrapper {
+    flex: 0 0 100px; /* Slightly smaller thumbnails on mobile */
   }
 }
 
-.card {
-  padding: 2em;
-}
+/* 3. Small Mobile (Typically < 480px) */
+@media (max-width: 480px) {
+  .ent-card {
+    flex-direction: column; /* Optional: Stack the thumbnail ABOVE the text */
+    align-items: flex-start;
+  }
 
-.read-the-docs {
-  color: #888;
+  .card-image-wrapper {
+    width: 100%;
+    flex: none;
+  }
+
+  .card-img {
+    height: 180px; /* Larger image if stacked vertically */
+  }
 }

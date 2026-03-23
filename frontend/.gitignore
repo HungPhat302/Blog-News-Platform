@@ -11,7 +11,8 @@ node_modules
 dist
 dist-ssr
 *.local
-
+src/assets/sofia-pro
+src/assets/oswald
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

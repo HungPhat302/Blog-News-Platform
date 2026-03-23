@@ -1,0 +1,108 @@
+/* Container styling to match your 1200px max-width layout */
+.form-wrapper {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #ffffff;
+  border: 1px solid #eee;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Reusing your Red Underline header style */
+.form-section-header {
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 25px;
+  position: relative;
+}
+
+.form-section-title {
+  color: #333;
+  font-size: 1.6rem;
+  margin: 0;
+  padding-bottom: 10px;
+  border-bottom: 3px solid #e74c3c; /* Brand Red */
+  display: inline-block;
+  margin-bottom: -2px; /* Pulls it down to overlap the header border */
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.form-section-title span {
+  color: #e74c3c;
+}
+
+.form-description {
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 25px;
+}
+
+/* Form Layout */
+.custom-news-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #444;
+  text-transform: uppercase;
+}
+
+.input-group input, 
+.input-group textarea {
+width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  background-color: #ffffff; 
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;/* Ensures padding doesn't break width */
+}
+
+.input-group input:focus, 
+.input-group textarea:focus {
+  outline: none;
+  border-color: #e74c3c; /* Glow red on focus */
+}
+
+/* Submit Button styling consistent with your Sport section buttons */
+.form-btn-submit {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 15px;
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+  margin-top: 10px;
+}
+
+.form-btn-submit:hover {
+  background: #c0392b; /* Darker red on hover */
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+  .form-wrapper {
+    margin: 20px;
+    padding: 20px;
+  }
+  
+  .form-section-title {
+    font-size: 1.3rem;
+  }
+}
