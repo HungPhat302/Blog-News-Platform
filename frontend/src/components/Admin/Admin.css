@@ -1,0 +1,261 @@
+.admin-dashboard {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+  font-family: 'Sofia Pro', sans-serif;
+}
+
+/* Header Section */
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 30px;
+}
+
+.admin-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.admin-subtitle {
+  color: #888;
+  margin: 5px 0 0 0;
+}
+
+.btn-add-user {
+  background-color: #1a1a1a;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+/* Table Design */
+.table-container {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+}
+
+.user-table {
+    width: 100%;
+  /* This merges the borders of adjacent cells into a single border */
+  border-collapse: collapse; 
+  /* This ensures no hidden gaps exist between cells */
+  border-spacing: 0; 
+  text-align: left;
+}
+
+.user-table th {
+  background-color: #fcfcfc;
+  padding: 18px 25px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #999;
+  border-bottom: 1px solid #eee;
+}
+
+.user-row {
+  border-bottom: 1px solid #f8f8f8;
+  transition: background 0.2s;
+}
+
+.user-row:hover {
+  background-color: #fafafa;
+}
+
+.user-table td {
+  padding: 20px 25px;
+  vertical-align: middle;
+}
+
+/* User Info Cell */
+.user-main-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-username {
+  font-weight: 700;
+  color: #222;
+  font-size: 15px;
+}
+
+.user-email {
+  color: #888;
+  font-size: 13px;
+}
+
+/* Role Badges */
+.role-badge {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.role-admin { background: #fee2e2; color: #ef4444; }
+.role-editor { background: #dcfce7; color: #16a34a; }
+.role-author { background: #fef9c3; color: #ca8a04; }
+.role-reader { background: #f3f4f6; color: #4b5563; }
+
+/* Status Dot */
+.status-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.status-dot.active { background-color: #22c55e; box-shadow: 0 0 8px rgba(34, 197, 94, 0.4); }
+.status-dot.inactive { background-color: #94a3b8; }
+
+/* Actions */
+.text-right { text-align: right; }
+
+.row-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.action-btn {
+  border: 1px solid #e5e7eb;
+  background: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-edit-row { color: #4b5563; }
+.btn-edit-row:hover { border-color: #1a1a1a; color: #1a1a1a; }
+
+.btn-delete-row { color: #ef4444; border-color: #fee2e2; }
+.btn-delete-row:hover { background-color: #ef4444; color: white; border-color: #ef4444; }
+
+.date-cell {
+  color: #666;
+  font-size: 14px;
+}
+
+.user-row:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.user-row:hover {
+  /* Keeps the hover effect prominent */
+  background-color: #f0f0f0 !important;
+}
+
+
+
+
+/* Mobile Responsiveness (768px and below) */
+@media screen and (max-width: 768px) {
+  
+  /* 1. Header Adjustment */
+  .admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .btn-add-user {
+    width: 100%; /* Full width button on mobile */
+    text-align: center;
+  }
+
+  /* 2. Transform Table to Cards */
+  .user-table, 
+  .user-table thead, 
+  .user-table tbody, 
+  .user-table th, 
+  .user-table td, 
+  .user-table tr {
+    display: block; /* Break the table structure */
+  }
+
+  /* Hide the header headers (Details, Role, etc.) */
+  .user-table thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  .user-row {
+    margin-bottom: 20px;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    background: #fff;
+    padding: 10px;
+  }
+
+  .user-table td {
+    border: none;
+    position: relative;
+    padding: 12px 10px 12px 50%; /* Make room for labels */
+    text-align: right;
+  }
+
+  /* 3. Add Labels using Pseudo-elements */
+  .user-table td::before {
+    content: attr(data-label); /* Pulls text from a data attribute */
+    position: absolute;
+    left: 15px;
+    width: 45%;
+    text-align: left;
+    font-weight: 700;
+    font-size: 12px;
+    color: #999;
+    text-transform: uppercase;
+  }
+
+  /* 4. Layout Fixes for specific cells */
+  .user-info-cell {
+    background: #fcfcfc;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    text-align: left !important;
+    padding-left: 15px !important;
+  }
+
+  .user-info-cell::before {
+    display: none; /* Hide label for the main user info */
+  }
+
+  .status-wrapper, .row-actions {
+    justify-content: flex-end;
+  }
+
+  .row-actions {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #f0f0f0;
+  }
+  .user-row {
+    margin-bottom: auto;
+    border-bottom: 1px solid #eee;
+    
+    border-radius: 12px;
+}
+  
+}

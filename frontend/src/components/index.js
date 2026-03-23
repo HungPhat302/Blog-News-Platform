@@ -13,4 +13,8 @@ import RegisterForm from "./Forms/Register/RegisterForm";
 import Article from "./Article/Article";
 import Logo from "./Logo/Logo";
 import LoginForm from "./Forms/Login/LoginForm";
-export {Ad,Category,Entertainment,Footer,Menu,News,Recent,Sports,Video,Popups,LifeStyle,RegisterForm,Article,Logo,LoginForm}
+import Author from "./Author/Author";
+import Post from "./Forms/Post/Post";
+import Admin from "./Admin/Admin";
+export {Ad,Category,Entertainment,Footer,Menu,News,Recent,Sports,Video
+    ,Popups,LifeStyle,RegisterForm,Article,Logo,LoginForm,Author,Post,Admin}
