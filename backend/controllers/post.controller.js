@@ -1,15 +1,9 @@
-// Chưa đủ API
-
-/* 
-1. Lấy danh sách bài viết publish x
-2. Chi tiết bài post x
-3. Lấy danh sách bài viết theo category 
-4. Lấy danh sách bài viết theo tag 
-*/
-
 const Post = require("../models/Post.model");
 const Category = require("../models/Category.model");
 const Tag = require("../models/Tag.model");
+const GenerateSlug = require("../utils/generate-slug");
+
+
 
 // Lấy tất cả bài posts
 exports.getPosts = async (_req, res) => {
@@ -131,9 +125,15 @@ exports.getPostByKeyword = async (req, res) => {
 exports.createPost = async (req, res) => {
     try {
 
-        const { title, content, slug, category, tags, author} = req.body;
+        const { title, content, category, tags, author} = req.body;
 
-        // const slugified = slug || title.toLowerCase().replace(/\s+/g, "-");    Tạo slug
+        let slug = await GenerateSlug.generateSlug(title);
+
+        if (!slug) {
+            return res.status(500).json({
+                message: "Slug generate failed"
+            })
+        }
 
         const imageurl = req.file ? req.file.path : null;
 
@@ -172,6 +172,11 @@ exports.updatePost = async (req, res) => {
         const { id } = req.params;
         let { title, content, category, tags, author } = req.body;
         let image;
+        let slug;
+
+        if (title) {
+            slug = await GenerateSlug.generateSlug(title);
+        }
 
         if (tags) {
             if (!Array.isArray(tags)) {
@@ -186,6 +191,10 @@ exports.updatePost = async (req, res) => {
             tags,
             author
         };
+
+        if (slug) {
+            updateData.slug = slug;
+        }
 
         if (req.file) {
             image = req.file;
