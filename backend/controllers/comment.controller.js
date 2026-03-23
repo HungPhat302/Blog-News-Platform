@@ -44,13 +44,13 @@ exports.createComment = async (req, res) => {
         return res.status(201).json({
             message: "Comment create successfully",
             data: comment
-        })
+        });
     } catch(error) {
         console.log(error);
         return res.status(500).json({
             message: "Internal server error",
             error: error.message
-        })
+        });
     }
 }
 
@@ -89,7 +89,7 @@ exports.updateComment = async (req, res) => {
         console.log(error);
         res.status(500).json({
             message: "Internal server error"
-        })
+        });
     }
 }
 

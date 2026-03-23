@@ -2,12 +2,10 @@ const mongoose = require("mongoose");
 
 const bookmarkSchema = new mongoose.Schema(
     {
-        posts: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "Post"
-            }   
-        ],
+        post: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Post"
+        },  
         user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User"
@@ -19,4 +17,4 @@ const bookmarkSchema = new mongoose.Schema(
     }
 )
 
-module.exports = mongoose.Schema("Bookmark", bookmarkSchema);
+module.exports = mongoose.model("Bookmark", bookmarkSchema);

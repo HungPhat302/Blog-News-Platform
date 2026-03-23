@@ -12,6 +12,7 @@ const userRoute = require("./routes/user.route");
 const adminRoute = require("./routes/admin.route");
 const commentRoute = require("./routes/comment.route");
 const reactionRoute = require("./routes/reaction.route");
+const bookmarkRoute = require("./routes/bookmark.route");
 
 //Connect MongoDB
 connectMongo(process.env.MONGO_URI);
@@ -30,6 +31,7 @@ app.use("/api/user", userRoute);
 app.use("/api/admin", adminRoute);
 app.use("/comment", commentRoute);
 app.use("/reaction", reactionRoute);
+app.use("/bookmark", bookmarkRoute);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
