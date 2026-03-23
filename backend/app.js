@@ -9,7 +9,7 @@ var logger = require('morgan');
 const postRoute = require("./routes/post.route");
 const authRoute = require("./routes/auth.route");
 const userRoute = require("./routes/user.route");
-const adminRoute = require("./routes/admin.user.route");
+const adminRoute = require("./routes/admin.route");
 const commentRoute = require("./routes/comment.route");
 const reactionRoute = require("./routes/reaction.route");
 
