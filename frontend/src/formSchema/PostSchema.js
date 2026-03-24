@@ -7,6 +7,7 @@ const PostSchema = Joi.object().keys({
     slug: Joi.string().required(),
     category: Joi.string(),
     tags: Joi.array().items(Joi.string()).sort().required(),
+    status:Joi.string().default("draft"),
     image: Joi.any()
         .custom((value, helpers) => {
             if (!value || value.length === 0) return value;
@@ -30,7 +31,8 @@ const PostSchema = Joi.object().keys({
             "file.invalidType": "Only JPG, PNG, WEBP allowed",
             "file.tooLarge": "File must be less than 2MB"
         }),
-    author: Joi.string().required()
+    author: Joi.string().required(),
+    publishdate: Joi.date().default(new Date())
 })
 
 
