@@ -1,0 +1,379 @@
+.review-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+  font-family: 'Sofia Pro', sans-serif;
+}
+
+/* Header Section */
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.review-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.review-subtitle {
+  color: #888;
+  margin: 5px 0 0 0;
+}
+
+.btn-refresh {
+  background: white;
+  border: 1px solid #ddd;
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Table Architecture */
+
+
+.posts-table th {
+  background: #fcfcfc;
+  padding: 15px 25px;
+  text-align: left;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #aaa;
+  border-bottom: 1px solid #eee;
+}
+
+.post-row {
+  border-bottom: 1px solid #f9f9f9;
+  transition: background 0.2s;
+}
+
+.post-row:hover {
+  background-color: #fcfcfc;
+}
+
+.posts-table td {
+  padding: 20px 25px;
+  vertical-align: middle;
+}
+
+/* Post Info Styling */
+.post-main-flex {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.post-thumb {
+  width: 45px;
+  height: 45px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #eee;
+}
+
+.post-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.post-title-text {
+  font-weight: 700;
+  color: #222;
+  font-size: 15px;
+}
+
+.post-author-text {
+  font-size: 13px;
+  color: #999;
+}
+
+/* Status & Category Badges */
+.status-pill {
+  padding: 5px 12px;
+  border-radius: 50px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.status-review { background: #fff7ed; color: #ea580c; }
+.status-draft { background: #f3f4f6; color: #4b5563; }
+.status-published { background: #f0fdf4; color: #16a34a; }
+
+.category-tag {
+  font-size: 13px;
+  color: #666;
+  background: #f0f0f0;
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+
+.date-text {
+  color: #888;
+  font-size: 14px;
+}
+
+/* Action Buttons (The two "Edit" variations) */
+.post-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.action-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+/* Variation 1: Main Content Edit */
+.btn-edit-content {
+  background: #f65050; /* Your brand red */
+  color: white;
+  border: none;
+}
+
+.btn-edit-content:hover {
+  background: #d43f3f;
+  transform: translateY(-1px);
+}
+
+/* Variation 2: Sidebar/Settings Quick Edit */
+.btn-edit-settings {
+  background: white;
+  color: #444;
+  border: 1px solid #ddd;
+}
+
+.btn-edit-settings:hover {
+  border-color: #f65050;
+  color: #f65050;
+}
+
+.text-right { text-align: right; }
+
+/* Mobile Responsiveness */
+@media (max-width: 800px) {
+  .posts-table thead { display: none; }
+  .posts-table, .posts-table tbody, .posts-table tr, .posts-table td { display: block; }
+  
+  .post-row {
+    margin-bottom: 15px;
+    padding: 10px;
+  }
+  
+  .posts-table td {
+    text-align: right;
+    padding: 10px 15px;
+    position: relative;
+  }
+  
+  .posts-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 15px;
+    font-weight: 800;
+    font-size: 11px;
+    color: #bbb;
+    text-transform: uppercase;
+  }
+  
+  .post-info-cell::before { display: none; }
+  .post-info-cell { text-align: left; background: #fafafa; border-radius: 10px; }
+  .post-actions { justify-content: center; margin-top: 10px; }
+}
+
+/* Container to hold multiple pills */
+.category-list {
+  display: flex;
+  flex-wrap: wrap; /* Allows pills to drop to next line */
+  gap: 6px;       /* Spacing between pills */
+  justify-content: flex-start;
+}
+
+/* On Desktop: Keep them left-aligned */
+.posts-table td .category-list {
+  justify-content: flex-start;
+}
+
+/* On Mobile: Since we aligned table text to the right, 
+   we need the flex-end to keep them pinned to the right side of the card */
+@media screen and (max-width: 768px) {
+  .category-list {
+    justify-content: flex-end; 
+    max-width: 200px; /* Prevents pills from squashing the label */
+    margin-left: auto;
+  }
+}
+
+/* Styling for a "No Category" state */
+.category-tag.muted {
+  background: #f9f9f9;
+  color: #ccc;
+  border: 1px dashed #ddd;
+}
+
+
+
+
+
+
+
+
+/* --- Desktop Base Styles (Keep your existing styles, but add these) --- */
+.posts-table-wrapper {
+  width: 100%;
+  overflow-x: auto; /* Fallback for weird mid-sized screens */
+  
+}
+
+
+
+
+.posts-table {
+  width: 100%;
+  min-width: 600px; /* Ensures desktop view doesn't get too squashed */
+  border-collapse: collapse;
+}
+
+/* --- THE RESPONSIVE MAGIC (768px and below) --- */
+@media screen and (max-width: 768px) {
+  
+  /* 1. Reset Table Structure */
+  .posts-table, 
+  .posts-table thead, 
+  .posts-table tbody, 
+  .posts-table th, 
+  .posts-table td, 
+  .posts-table tr { 
+    display: block; 
+    min-width: auto; 
+  }
+
+  /* 2. Hide Headers (visually, but keep for screen readers) */
+  .posts-table thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  /* 3. Turn the Row into a Card */
+  .post-row {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    padding: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+
+  /* 4. Style the Individual Cells */
+  .posts-table td {
+    border: none;
+    position: relative;
+    padding: 10px 0 10px 45%; /* Space for the label on the left */
+    text-align: right;
+    border-bottom: 1px solid #f9f9f9;
+  }
+
+  /* Inject labels using the data-label attribute */
+  .posts-table td:not(.post-info-cell):not(.action-cell)::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    width: 40%;
+    text-align: left;
+    font-weight: 800;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #bbb;
+  }
+
+  /* 5. Special Layout for the Title/Header of the Card */
+  .post-info-cell {
+    background: #fcfcfc;
+    border-radius: 8px;
+    margin: -5px -5px 10px -5px;
+    padding: 15px !important;
+    text-align: left !important;
+  }
+
+  .post-main-flex {
+    flex-direction: row; /* Keep thumb and title side-by-side */
+    gap: 12px;
+  }
+
+  .post-thumb {
+    width: 50px;
+    height: 50px;
+  }
+
+  /* 6. Action Buttons on Mobile */
+  .action-cell {
+    padding-left: 0 !important;
+    border-bottom: none !important;
+  }
+
+  .post-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal buttons */
+    gap: 10px;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .action-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 12px; /* Bigger touch target for fingers */
+  }
+
+  /* 7. Header Adjustment */
+  .review-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .btn-refresh {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+
+
+
+
+
+/* Ensure the Link wrapper doesn't break the layout */
+.post-actions a {
+  text-decoration: none; /* Remove default blue underline */
+  display: block;        /* Makes the link take up the full grid/flex space */
+}
+
+/* On Mobile: Ensure the Link expands to fill the 1fr grid column */
+@media screen and (max-width: 768px) {
+  .post-actions a {
+    width: 100%;
+  }
+  
+  /* Make the button inside the Link fill the whole space */
+  .post-actions a .action-btn {
+    width: 100%;
+  }
+}
+
+/* Hover consistency */
+.post-actions a:hover {
+  text-decoration: none;
+}

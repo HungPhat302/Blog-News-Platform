@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { Admin, Article, Author, Category, Footer, LoginForm, Logo, Menu, News, Popups,Post,RegisterForm } from './components/index.js'
+import { Admin, Article, Author, Category, EditorForm, Footer, LoginForm, Logo, Menu, News, Popups,Post,RegisterForm, ReviewPosts } from './components/index.js'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -23,7 +23,9 @@ createRoot(document.getElementById('root')).render(
         <Route path='/author' element={[<Popups/>,<Logo/>,<Menu/>,<Author/>,<Footer/>]}/>
         <Route path='/author/prepare_post' element={[<Popups/>,<Logo/>,<Menu/>,<Post/>,<Footer/>]}/>
         <Route path='/author/edit_post/:id' element={[<Popups/>,<Logo/>,<Menu/>,<Post/>,<Footer/>]}/>
+        <Route path='/editors/edit_post/:id' element={[<Popups/>,<Logo/>,<Menu/>,<EditorForm/>,<Footer/>]}/>
         <Route path='/admin' element={[<Popups/>,<Logo/>,<Menu/>,<Admin/>,<Footer/>]}/>
+        <Route path='/editors' element={[<Popups/>,<Logo/>,<Menu/>,<ReviewPosts/>,<Footer/>]}/>
       </Routes>
     </BrowserRouter>
   </StrictMode>,

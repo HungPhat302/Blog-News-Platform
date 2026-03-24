@@ -16,5 +16,7 @@ import LoginForm from "./Forms/Login/LoginForm";
 import Author from "./Author/Author";
 import Post from "./Forms/Post/Post";
 import Admin from "./Admin/Admin";
+import ReviewPosts from "./Editor/EditorDash";
+import EditorForm from "./Forms/Editor/Editor";
 export {Ad,Category,Entertainment,Footer,Menu,News,Recent,Sports,Video
-    ,Popups,LifeStyle,RegisterForm,Article,Logo,LoginForm,Author,Post,Admin}
+    ,Popups,LifeStyle,RegisterForm,Article,Logo,LoginForm,Author,Post,Admin,ReviewPosts,EditorForm}
