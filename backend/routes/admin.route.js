@@ -12,8 +12,8 @@ router.delete("/users/:id", verifyToken, allowRoles("admin"), controller.deleteU
 router.patch("/users/:id/role", verifyToken, allowRoles("admin"), controller.updateRole);
 router.patch("/users/:id/status", verifyToken, allowRoles("admin"), controller.updateStatus); // have error
 
-router.post("/category", verifyToken, allowRoles("admin, author"), controller.createCategory); //done
+router.post("/category", verifyToken, allowRoles("admin"), controller.createCategory); // Phải tách controller riêng
 
-router.post("/tag", verifyToken, allowRoles("admin, author"), controller.createTag); //done
+router.post("/tag", verifyToken, allowRoles("admin"), controller.createTag); //Phải tách controller riêng
 
 module.exports = router;

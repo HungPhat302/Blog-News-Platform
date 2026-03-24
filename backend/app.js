@@ -10,6 +10,7 @@ const postRoute = require("./routes/post.route");
 const authRoute = require("./routes/auth.route");
 const userRoute = require("./routes/user.route");
 const adminRoute = require("./routes/admin.route");
+const editorRoute = require("./routes/editor.route");
 const commentRoute = require("./routes/comment.route");
 const reactionRoute = require("./routes/reaction.route");
 const bookmarkRoute = require("./routes/bookmark.route");
@@ -29,24 +30,9 @@ app.use("/posts", postRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
 app.use("/api/admin", adminRoute);
+app.use("/api/editor", editorRoute);
 app.use("/comment", commentRoute);
 app.use("/reaction", reactionRoute);
 app.use("/bookmark", bookmarkRoute);
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
-
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.message('error');
-});
 
 module.exports = app;
