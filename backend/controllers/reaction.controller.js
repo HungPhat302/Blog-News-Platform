@@ -2,16 +2,16 @@ const Reaction = require("../models/Reaction.model");
 
 exports.createReaction = async (req, res) => {
     try {
-        const { comment, user } = req.body;
-
-        if (!comment || !user) {
+        const { commentid } = req.params;
+        const userid = req.user.userId;
+        if (!commentid) {
             return res.status(400).json({
                 message: "Bad request"
             });
         }
         const reaction = await Reaction.create({
-            comment,
-            user,
+            comment: commentid,
+            user: userid,
         });
 
         console.log("Reaction created");
@@ -22,7 +22,7 @@ exports.createReaction = async (req, res) => {
         })
     } catch(error) {
         console.log(error);
-        // 🔥 nếu duplicate (đã like rồi)
+        // nếu duplicate (đã like rồi)
         if (error.code === 11000) {
             return res.status(400).json({
                 message: "Already liked this comment"
