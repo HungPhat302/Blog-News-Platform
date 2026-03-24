@@ -1,5 +1,3 @@
-// const slugified = slug || title.toLowerCase().replace(/\s+/g, "-");
-
 exports.generateSlug = async (title) => {
     let slug = title.toLowerCase().toLowerCase()
     .normalize("NFD") // tách dấu khỏi ký tự

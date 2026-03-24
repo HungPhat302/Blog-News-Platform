@@ -1,6 +1,4 @@
 const User = require("../models/User.model");
-const Category = require("../models/Category.model");
-const Tag = require("../models/Tag.model");
 const bcrypt = require("bcryptjs");
 
 exports.getUsers = async (req, res) => {
@@ -80,35 +78,3 @@ exports.updateStatus = async (req, res) => {
 
   res.json(user);
 };
-
-
-// Tạo category
-exports.createCategory = async (req, res) => {
-  const { name, slug, description } = req.body;
-
-  const category = await Category.create({
-    name,
-    slug,
-    description
-  });
-
-  res.status(201).json({
-    message: "Create category successfully",
-    category
-  });
-}
-
-// Tạo thẻ tag
-exports.createTag = async (req, res) => {
-  const { name, slug } = req.body;
-
-  const tag = await Tag.create({
-    name,
-    slug
-  });
-
-  res.status(201).json({
-    message: "Create tag successfully",
-    tag
-  });
-}

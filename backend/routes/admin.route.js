@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const controller = require("../controllers/admin.user.controller");
+const controller = require("../controllers/admin.controller");
 const { verifyToken } = require("../middlewares/auth.middleware");
 const { allowRoles } = require("../middlewares/rbac.middleware");
 
@@ -11,9 +11,5 @@ router.delete("/users/:id", verifyToken, allowRoles("admin"), controller.deleteU
 
 router.patch("/users/:id/role", verifyToken, allowRoles("admin"), controller.updateRole);
 router.patch("/users/:id/status", verifyToken, allowRoles("admin"), controller.updateStatus); // have error
-
-router.post("/category", verifyToken, allowRoles("admin"), controller.createCategory); // Phải tách controller riêng
-
-router.post("/tag", verifyToken, allowRoles("admin"), controller.createTag); //Phải tách controller riêng
 
 module.exports = router;
