@@ -6,9 +6,47 @@ const GenerateSlug = require("../utils/generate-slug");
 
 
 // Lấy tất cả bài posts
-exports.getPosts = async (_req, res) => {
+exports.getPosts = async (req, res) => {
     try {
-        const posts = await Post.find().sort({ createAt: -1});
+        // 1. Query params
+        const {
+            page = 1,
+            limit = 10,
+            sortBy = "createdAt",
+            order = "desc",
+            status,
+            author,
+            fromDate,
+            toDate
+        } = req.query;
+
+        // 2. Pagination
+        const skip = (page - 1) * limit;
+        
+        // 3. Build filter object
+        let filter = {};
+
+        if (status) {
+            filter.status = status;
+        }
+
+        if (author) {
+            filter.author = author;
+        }
+
+        if (fromDate || toDate) {
+            filter.createdAt = {};
+            if (fromDate) filter.createdAt.$gte = new Date(fromDate);
+            if (toDate) filter.createdAt.$lte = new Date(toDate);
+        }
+
+        // 4. Sorting
+        const sortOption = {
+            [sortBy]: order === "desc" ? -1 : 1
+        };
+
+        const posts = await Post.find().sort(sortOption).skip(skip).limit(parseInt(limit));
+
         return res.status(200).json({
             message: "Successfully to get posts",
             data: posts
@@ -122,6 +160,7 @@ exports.getPostByKeyword = async (req, res) => {
 };
 
 // Tạo post mới
+// Phát triển tiếp
 exports.createPost = async (req, res) => {
     try {
 
