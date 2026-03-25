@@ -1,20 +1,52 @@
-// Chưa đủ API
-
-/* 
-1. Lấy danh sách bài viết publish x
-2. Chi tiết bài post x
-3. Lấy danh sách bài viết theo category 
-4. Lấy danh sách bài viết theo tag 
-*/
-
 const Post = require("../models/Post.model");
 const Category = require("../models/Category.model");
 const Tag = require("../models/Tag.model");
+const GenerateSlug = require("../utils/generate-slug");
+
+
 
 // Lấy tất cả bài posts
-exports.getPosts = async (_req, res) => {
+exports.getPosts = async (req, res) => {
     try {
-        const posts = await Post.find().sort({ createAt: -1});
+        // 1. Query params
+        const {
+            page = 1,
+            limit = 10,
+            sortBy = "createdAt",
+            order = "desc",
+            status,
+            author,
+            fromDate,
+            toDate
+        } = req.query;
+
+        // 2. Pagination
+        const skip = (page - 1) * limit;
+        
+        // 3. Build filter object
+        let filter = {};
+
+        if (status) {
+            filter.status = status;
+        }
+
+        if (author) {
+            filter.author = author;
+        }
+
+        if (fromDate || toDate) {
+            filter.createdAt = {};
+            if (fromDate) filter.createdAt.$gte = new Date(fromDate);
+            if (toDate) filter.createdAt.$lte = new Date(toDate);
+        }
+
+        // 4. Sorting
+        const sortOption = {
+            [sortBy]: order === "desc" ? -1 : 1
+        };
+
+        const posts = await Post.find().sort(sortOption).skip(skip).limit(parseInt(limit));
+
         return res.status(200).json({
             message: "Successfully to get posts",
             data: posts
@@ -128,12 +160,19 @@ exports.getPostByKeyword = async (req, res) => {
 };
 
 // Tạo post mới
+// Phát triển tiếp
 exports.createPost = async (req, res) => {
     try {
 
-        const { title, content, slug, category, tags, author} = req.body;
+        const { title, content, category, tags, author} = req.body;
 
-        // const slugified = slug || title.toLowerCase().replace(/\s+/g, "-");    Tạo slug
+        let slug = await GenerateSlug.generateSlug(title);
+
+        if (!slug) {
+            return res.status(500).json({
+                message: "Slug generate failed"
+            })
+        }
 
         const imageurl = req.file ? req.file.path : null;
 
@@ -172,6 +211,11 @@ exports.updatePost = async (req, res) => {
         const { id } = req.params;
         let { title, content, category, tags, author } = req.body;
         let image;
+        let slug;
+
+        if (title) {
+            slug = await GenerateSlug.generateSlug(title);
+        }
 
         if (tags) {
             if (!Array.isArray(tags)) {
@@ -186,6 +230,10 @@ exports.updatePost = async (req, res) => {
             tags,
             author
         };
+
+        if (slug) {
+            updateData.slug = slug;
+        }
 
         if (req.file) {
             image = req.file;

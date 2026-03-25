@@ -3,18 +3,19 @@ const { hashPassword, comparePassword } = require("../utils/hash");
 const { generateTokens } = require("../services/token.service");
 
 // Register
-exports.register = async (req, res, next) => {
-  const { email, password } = req.body;
+exports.register = async (req, res) => {
+  const { username, email, password } = req.body;
 
   const exists = await User.findOne({ email });
   if (exists) return res.status(400).json({ message: "Email already exists" });
 
-  const user = await User.create({
+  await User.create({
     email,
+    username,
     password: await hashPassword(password)
   });
 
-  res.status(201).json({ message: "Register success" });
+  res.status(201).json({message: "Register success"});
 };
 
 // Login
@@ -63,6 +64,13 @@ const crypto = require("crypto");
 // Forgot Password
 exports.forgotPassword = async (req, res) => {
   const user = await User.findOne({ email: req.body.email });
+
+  if (!validator.validate(email)) {
+    return res.status(400).json({
+      message: "Email must be in pattern"
+    })
+  };
+
   if (!user) return res.json({ message: "If email exists, reset link sent" });
 
   const token = crypto.randomBytes(32).toString("hex");
