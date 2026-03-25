@@ -5,6 +5,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const cors = require('cors');
 
 const postRoute = require("./routes/post.route");
 const authRoute = require("./routes/auth.route");
@@ -27,16 +28,22 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(cors({
+  origin: 'http://localhost:5173', // domain frontend
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true // nếu dùng cookie, auth
+}));
+
 // Assign routes
-app.use("/posts", postRoute);
+app.use("/api/posts", postRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
 app.use("/api/admin", adminRoute);
 app.use("/api/editor", editorRoute);
-app.use("/category", categoryRoute);
-app.use("/tag", tagRoute);
-app.use("/comment", commentRoute);
-app.use("/reaction", reactionRoute);
-app.use("/bookmark", bookmarkRoute);
+app.use("/api/category", categoryRoute);
+app.use("/api/tag", tagRoute);
+app.use("/api/comment", commentRoute);
+app.use("/api/reaction", reactionRoute);
+app.use("/api/bookmark", bookmarkRoute);
 
 module.exports = app;
