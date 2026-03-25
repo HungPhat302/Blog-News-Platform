@@ -68,7 +68,7 @@ exports.updateComment = async (req, res) => {
 
         const comment = await Comment.findByIdAndUpdate(
             commentid,
-            { content }, // Flag: coi lại cách hoạt động
+            { content },
             {
                 new: true,
                 runValidators: true

@@ -7,7 +7,7 @@ router.post("/register", registerValidator, validate, controller.register); //do
 router.post("/login", loginValidator, validate, controller.login); //done
 router.post("/refresh-token", controller.refreshToken); //done
 router.post("/logout", controller.logout); //done
-router.post("/forgot-password", controller.forgotPassword);
-router.post("/reset-password", controller.resetPassword);
+router.post("/forgot-password", controller.forgotPassword); // chưa test
+router.post("/reset-password", controller.resetPassword); // chưa test
 
 module.exports = router;

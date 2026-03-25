@@ -8,5 +8,5 @@ const router = express.Router();
 router.get("/", verifyToken, allowRoles("reader", "author"), controller.getAllBookmark);
 router.post("/:postid", verifyToken, allowRoles("reader", "author"), controller.saveBookmark);
 router.delete("/:bookmarkid", verifyToken, allowRoles("reader", "author"), controller.removeBookmark);
-
+ 
 module.exports = router;
