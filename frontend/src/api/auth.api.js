@@ -1,8 +1,23 @@
 import axiosClient from './axiosClient';
 
 export const authApi = {
-  login: (data) => axiosClient.post('/auth/login', data), // Đảm bảo Backend route là /auth/login, nếu khác hãy sửa lại
+  // --- AUTHENTICATION ---
   register: (data) => axiosClient.post('/auth/register', data),
-  forgotPassword: (data) => axiosClient.post('/auth/forgotPassword', data),
-  resetPassword: (data) => axiosClient.post('/auth/resetPassword', data),
+  login: (data) => axiosClient.post('/auth/login', data), 
+  refreshToken: (data) => axiosClient.post('/auth/refresh-token', data),
+  logout: (data) => axiosClient.post('/auth/logout', data),
+  
+  forgotPassword: (data) => axiosClient.post('/auth/forgot-password', data),
+  resetPassword: (data) => axiosClient.post('/auth/reset-password', data),
+  
+  // --- USER PROFILE (Khớp với file route của Backend) ---
+  getUserInfo: () => axiosClient.get('/user/me'), 
+  upgradeToAuthor: () => axiosClient.put('/user/me/author'),
+  
+  // --- ADMIN ROLE ---
+  getAllUsers: () => axiosClient.get('/admin/users'),
+  getUserById: (id) => axiosClient.get(`/admin/users/${id}`),
+  updateUserStatus: (id, statusData) => axiosClient.patch(`/admin/users/${id}/status`, statusData),
+  updateUserRole: (id, roleData) => axiosClient.patch(`/admin/users/${id}/role`, roleData),
+  deleteUser: (id) => axiosClient.delete(`/admin/users/${id}`),
 };
