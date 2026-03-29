@@ -9,14 +9,14 @@ export const postApi = {
   searchByTag: (tagSlug) => axiosClient.get(`/posts/tag/${tagSlug}`),
 
   createPost: (data) => axiosClient.post('/posts', data),
-  
+
   createPostByAuthor: (data) => axiosClient.post('/posts', data), 
   createPostByAdmin: (data) => axiosClient.post('/posts', data), 
   updatePost: (id, data) => axiosClient.put(`/posts/${id}`, data),
   deletePost: (id) => axiosClient.delete(`/posts/${id}`),
 
   submitToReview: (id) => axiosClient.put(`/user/me/${id}`), 
-
+  
   // --- EDITOR ROLE ---
   getEditorPosts: () => axiosClient.get('/editor'), 
   getEditorPostDetail: (id) => axiosClient.get(`/editor/${id}`),  
