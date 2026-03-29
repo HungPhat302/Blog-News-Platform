@@ -62,7 +62,7 @@ export default function CreatePost() {
             content: markdownContent || '', 
             category: postData.category?._id || postData.category || '',
             author: postData.author || '',
-            tags: postData.tags?.map(t => t._id || t) || [] 
+            tags: postData.tags ? postData.tags.map(t => t._id || t).filter(t => typeof t === 'string') : [] ,
           });
           setImagePreview(postData.image || postData.thumbnail || '');
         }
@@ -107,7 +107,6 @@ export default function CreatePost() {
 const handleSubmit = async (e) => {
   e.preventDefault();
 
-  // Kiểm tra dữ liệu đầu vào cơ bản
   if (!formData.title.trim()) return alert("Vui lòng nhập tiêu đề bài viết!");
   if (!formData.author.trim()) return alert("Vui lòng nhập tên tác giả!");
   if (!formData.content.trim()) return alert("Vui lòng nhập nội dung chi tiết!");
@@ -117,38 +116,37 @@ const handleSubmit = async (e) => {
 
   try {
     const submitData = new FormData();
-    
-    // Đảm bảo mỗi key chỉ append 1 lần duy nhất
+
     submitData.append('title', formData.title);
-    submitData.append('summary', formData.summary);
-    submitData.append('content', formData.content); // Backend sẽ nhận content này và map vào content_markdown
+    submitData.append('summary', formData.summary || '');
+    submitData.append('content', formData.content);
     submitData.append('category', formData.category);
-    submitData.append('author', formData.author); // Lấy tên từ ô input Tên tác giả
+    submitData.append('author', formData.author);
 
-    // Gửi Tags
+    // ====================== SỬA PHẦN TAGS ======================
     if (formData.tags && formData.tags.length > 0) {
-      formData.tags.forEach(tagId => submitData.append('tags', tagId));
+      // Cách tốt nhất: dùng tags[] 
+      formData.tags.forEach(tagId => {
+        submitData.append('tags[]', tagId);   // ← Thêm dấu [] 
+      });
     }
+    // =========================================================
 
-    // Gửi ảnh bìa (Backend dùng req.file.path nên key phải khớp với middleware upload)
     if (imageFile) {
-      submitData.append('image', imageFile); 
+      submitData.append('image', imageFile);
     }
 
-    // Gọi API
     if (isEditMode) {
       await postApi.updatePost(id, submitData);
       alert('Cập nhật bài viết thành công!');
     } else {
-      // Đảm bảo postApi.createPost nhận FormData
-      await postApi.createPost(submitData); 
+      await postApi.createPost(submitData);
       alert('Tạo bài viết thành công!');
     }
-    
+
     navigate('/dashboard/posts');
-    
   } catch (error) {
-    const errorMsg = error.response?.data?.message || 'Có lỗi xảy ra khi lưu bài viết!';
+    const errorMsg = error.response?.data?.message || error.message || 'Có lỗi xảy ra khi lưu bài viết!';
     alert(errorMsg);
     console.error(error);
   } finally {
