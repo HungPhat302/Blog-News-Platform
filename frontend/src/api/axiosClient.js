@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const axiosClient = axios.create({
   // SỬA LẠI URL NÀY NẾU BACKEND CỦA BẠN CHẠY PORT KHÁC
-  baseURL: 'http://localhost:5000/api', 
+  baseURL: 'http://localhost:3000/api', 
   headers: {
     'Content-Type': 'application/json',
   },
