@@ -2,13 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { postApi } from '../../../api/post.api';
 import { taxonomyApi } from '../../../api/taxonomy.api'; 
-import { useAuth } from '../../../context/AuthContext';
 
 export default function CreatePost() {
   const navigate = useNavigate();
   const { id } = useParams();
   const isEditMode = Boolean(id);
-  const { user } = useAuth(); 
 
   // 1. Đã gỡ bỏ trường "slug" khỏi formData
   const [formData, setFormData] = useState({
@@ -105,61 +103,58 @@ export default function CreatePost() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+    // Tìm đến hàm handleSubmit và sửa lại phần try-catch như sau:
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!formData.title.trim()) return alert("Vui lòng nhập tiêu đề bài viết!");
-    if (!formData.author.trim()) return alert("Vui lòng nhập tên tác giả!");
-    if (!formData.content.trim()) return alert("Vui lòng nhập nội dung chi tiết!");
-    if (!formData.category) return alert("Vui lòng chọn danh mục (Category)!");
+  // Kiểm tra dữ liệu đầu vào cơ bản
+  if (!formData.title.trim()) return alert("Vui lòng nhập tiêu đề bài viết!");
+  if (!formData.author.trim()) return alert("Vui lòng nhập tên tác giả!");
+  if (!formData.content.trim()) return alert("Vui lòng nhập nội dung chi tiết!");
+  if (!formData.category) return alert("Vui lòng chọn danh mục!");
 
-    const authorId = user?._id || user?.userId || user?.id; 
-    if (!authorId) {
-        alert("Lỗi: Không tìm thấy ID tác giả. Vui lòng F5 hoặc đăng nhập lại!");
-        return;
+  setLoading(true);
+
+  try {
+    const submitData = new FormData();
+    
+    // Đảm bảo mỗi key chỉ append 1 lần duy nhất
+    submitData.append('title', formData.title);
+    submitData.append('summary', formData.summary);
+    submitData.append('content', formData.content); // Backend sẽ nhận content này và map vào content_markdown
+    submitData.append('category', formData.category);
+    submitData.append('author', formData.author); // Lấy tên từ ô input Tên tác giả
+
+    // Gửi Tags
+    if (formData.tags && formData.tags.length > 0) {
+      formData.tags.forEach(tagId => submitData.append('tags', tagId));
     }
 
-    setLoading(true);
-
-    try {
-      const submitData = new FormData();
-      
-      submitData.append('title', formData.title);
-      submitData.append('author', formData.author);
-      submitData.append('summary', formData.summary);
-      submitData.append('content', formData.content);
-      submitData.append('category', formData.category);
-      submitData.append('author', authorId);
-
-      if (formData.tags && formData.tags.length > 0) {
-        formData.tags.forEach(tagId => submitData.append('tags', tagId));
-      }
-
-      // ⚠️ GHI CHÚ QUAN TRỌNG VỀ UPLOAD ẢNH:
-      // Frontend đang gửi file ảnh dưới tên biến là 'image'
-      // Nếu Backend của bạn khai báo multer là upload.single('file') hoặc upload.single('thumbnail')
-      // thì bạn PHẢI sửa chữ 'image' màu đỏ bên dưới thành 'file' hoặc 'thumbnail' cho khớp nhé.
-      if (imageFile) {
-        submitData.append('image', imageFile); 
-      }
-
-      if (isEditMode) {
-        await postApi.updatePost(id, submitData);
-        alert('Cập nhật bài viết thành công!');
-      } else {
-        await postApi.createPostByAuthor(submitData); 
-        alert('Tạo bài viết thành công!');
-      }
-      
-      navigate('/dashboard/posts');
-      
-    } catch (error) {
-      alert(error.response?.data?.message || 'Có lỗi xảy ra khi lưu bài viết!');
-      console.error(error);
-    } finally {
-      setLoading(false);
+    // Gửi ảnh bìa (Backend dùng req.file.path nên key phải khớp với middleware upload)
+    if (imageFile) {
+      submitData.append('image', imageFile); 
     }
-  };
+
+    // Gọi API
+    if (isEditMode) {
+      await postApi.updatePost(id, submitData);
+      alert('Cập nhật bài viết thành công!');
+    } else {
+      // Đảm bảo postApi.createPost nhận FormData
+      await postApi.createPost(submitData); 
+      alert('Tạo bài viết thành công!');
+    }
+    
+    navigate('/dashboard/posts');
+    
+  } catch (error) {
+    const errorMsg = error.response?.data?.message || 'Có lỗi xảy ra khi lưu bài viết!';
+    alert(errorMsg);
+    console.error(error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   if (fetching) return <div style={{ padding: '30px', textAlign: 'center' }}>Đang khởi tạo giao diện... ⏳</div>;
 

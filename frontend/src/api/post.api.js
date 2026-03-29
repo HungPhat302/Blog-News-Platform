@@ -8,6 +8,8 @@ export const postApi = {
   searchByCategory: (categorySlug) => axiosClient.get(`/posts/category/${categorySlug}`),
   searchByTag: (tagSlug) => axiosClient.get(`/posts/tag/${tagSlug}`),
 
+  createPost: (data) => axiosClient.post('/posts', data),
+  
   createPostByAuthor: (data) => axiosClient.post('/posts', data), 
   createPostByAdmin: (data) => axiosClient.post('/posts', data), 
   updatePost: (id, data) => axiosClient.put(`/posts/${id}`, data),
