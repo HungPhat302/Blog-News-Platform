@@ -1,72 +1,95 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { postApi } from '../../api/post.api';
+import { taxonomyApi } from '../../api/taxonomy.api'; //
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
+  const [categories, setCategories] = useState([]); //
   const [loading, setLoading] = useState(true);
+  const scrollRef = useRef(null);
 
   useEffect(() => {
-    const fetchPublishedPosts = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
-        const res = await postApi.getPosts();
-        const allPosts = res.data || [];
+        // Lấy bài viết và danh mục cùng lúc
+        const [postsRes, catsRes] = await Promise.all([
+          postApi.getPosts(),
+          taxonomyApi.getCategories() //
+        ]);
 
-        // 🛡️ FRONTEND FILTER: Chặn đứng bản nháp, chỉ cho phép bài 'published' lên trang chủ
-        const publishedPosts = allPosts.filter(post => post.status === 'published');
-        
-        setPosts(publishedPosts);
+        const allPosts = postsRes.data || [];
+        setPosts(allPosts.filter(post => post.status === 'published'));
+        setCategories(catsRes.data || []);
       } catch (error) {
-        console.error('Lỗi lấy danh sách trang chủ:', error);
+        console.error('Lỗi lấy dữ liệu trang chủ:', error);
       } finally {
         setLoading(false);
       }
     };
-
-    fetchPublishedPosts();
+    fetchData();
   }, []);
 
+  // Hàm hỗ trợ cuộn ngang bằng nút (giống prev/next-nav)
+  const scroll = (direction) => {
+    if (scrollRef.current) {
+      const { scrollLeft } = scrollRef.current;
+      const scrollTo = direction === 'left' ? scrollLeft - 200 : scrollLeft + 200;
+      scrollRef.current.scrollTo({ left: scrollTo, behavior: 'smooth' });
+    }
+  };
+
   return (
-    <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '40px 20px' }}>
-      <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-        <h1 style={{ fontSize: '36px', color: '#333', marginBottom: '10px' }}>📰 Tin tức & Bài viết mới nhất</h1>
-        <p style={{ color: '#666', fontSize: '16px' }}>Cập nhật những thông tin và kiến thức bổ ích mỗi ngày.</p>
+    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
+      
+      {/* 1. Category Navigation Bar (Phong cách VnExpress) */}
+      <nav style={styles.navWrapper}>
+        <button onClick={() => scroll('left')} style={styles.scrollBtn}>❮</button>
+        
+        <ul ref={scrollRef} style={styles.categoryList}>
+          <li style={styles.navItem}>
+            <Link to="/" style={styles.navLinkActive}>🏠 Trang chủ</Link>
+          </li>
+          
+          
+          {categories.map(cat => (
+            <li key={cat._id} style={styles.navItem}>
+              <Link to={`/category/${cat.slug}`} style={styles.navLink}>
+                {cat.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        <button onClick={() => scroll('right')} style={styles.scrollBtn}>❯</button>
+      </nav>
+
+      {/* 2. Header Tiêu đề */}
+      <div style={{ textAlign: 'center', margin: '40px 0' }}>
+        <h1 style={{ fontSize: '32px', color: '#333' }}>📰 Tin tức mới nhất</h1>
+        <p style={{ color: '#888' }}>Cập nhật kiến thức mỗi ngày</p>
       </div>
 
+      {/* 3. Lưới bài viết */}
       {loading ? (
         <div style={{ textAlign: 'center', padding: '50px' }}>Đang tải bài viết... ⏳</div>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '30px' }}>
           {posts.length === 0 ? (
-            <p style={{ textAlign: 'center', gridColumn: '1 / -1', color: '#888' }}>Hiện chưa có bài viết nào được xuất bản.</p>
+            <p style={{ textAlign: 'center', gridColumn: '1 / -1' }}>Chưa có bài viết nào.</p>
           ) : (
             posts.map(post => (
-              <div key={post._id} style={{ backgroundColor: '#fff', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', transition: 'transform 0.3s' }}>
-                {/* Ảnh bìa */}
-                <div style={{ height: '200px', backgroundColor: '#e9ecef' }}>
-                  {post.image ? (
-                    <img src={post.image} alt={post.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  ) : (
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#aaa' }}>Không có ảnh</div>
-                  )}
-                </div>
-                
-                {/* Nội dung Card */}
-                <div style={{ padding: '20px' }}>
-                  <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#007bff', textTransform: 'uppercase' }}>
-                    {post.category?.name || 'Tin tức'}
-                  </span>
-                  <h3 style={{ margin: '10px 0', fontSize: '20px', lineHeight: '1.4' }}>
-                    <Link to={`/post/${post._id}`} style={{ color: '#333', textDecoration: 'none' }}>{post.title}</Link>
+              <div key={post._id} style={styles.postCard}>
+                <Link to={`/post/${post._id}`}>
+                  <img src={post.image || 'https://placehold.co/600x400'} alt={post.title} style={styles.postImg} />
+                </Link>
+                <div style={{ padding: '15px' }}>
+                  <span style={styles.catLabel}>{post.category?.name || 'Chung'}</span>
+                  <h3 style={styles.postTitle}>
+                    <Link to={`/post/${post._id}`} style={{ color: '#222', textDecoration: 'none' }}>{post.title}</Link>
                   </h3>
-                  <p style={{ color: '#666', fontSize: '14px', lineHeight: '1.6', marginBottom: '20px', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                    {post.summary}
-                  </p>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #eee', paddingTop: '15px' }}>
-                    <span style={{ fontSize: '13px', color: '#888', fontWeight: 'bold' }}>✍️ {post.author?.username || 'Ẩn danh'}</span>
-                    <Link to={`/post/${post._id}`} style={{ fontSize: '13px', color: '#007bff', textDecoration: 'none', fontWeight: 'bold' }}>Đọc tiếp ➜</Link>
-                  </div>
+                  <p style={styles.summary}>{post.summary}</p>
                 </div>
               </div>
             ))
@@ -76,3 +99,69 @@ export default function Home() {
     </div>
   );
 }
+
+// 4. Định nghĩa Styles (Inline cho đơn giản, bạn có thể chuyển sang CSS file)
+const styles = {
+  navWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    borderBottom: '1px solid #ddd',
+    backgroundColor: '#fff',
+    position: 'sticky',
+    top: '0',
+    zIndex: 100,
+    padding: '0 10px'
+  },
+  categoryList: {
+    display: 'flex',
+    overflowX: 'auto',
+    listStyle: 'none',
+    margin: 0,
+    padding: '10px 0',
+    flex: 1,
+    scrollbarWidth: 'none', // Ẩn scrollbar trên Firefox
+    msOverflowStyle: 'none', // Ẩn scrollbar trên IE/Edge
+  },
+  // Lưu ý: Để ẩn hoàn toàn trên Chrome, bạn nên dùng CSS file với ::-webkit-scrollbar { display: none; }
+  navItem: {
+    whiteSpace: 'nowrap',
+    padding: '0 15px',
+    fontSize: '15px',
+    fontWeight: '500'
+  },
+  navLink: {
+    textDecoration: 'none',
+    color: '#444',
+    transition: 'color 0.2s',
+  },
+  navLinkActive: {
+    textDecoration: 'none',
+    color: '#9f224e', // Màu đỏ VnExpress
+    fontWeight: 'bold'
+  },
+  scrollBtn: {
+    background: 'none',
+    border: 'none',
+    fontSize: '20px',
+    cursor: 'pointer',
+    padding: '10px',
+    color: '#888'
+  },
+  postCard: {
+    backgroundColor: '#fff',
+    borderRadius: '8px',
+    overflow: 'hidden',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+  },
+  postImg: { width: '100%', height: '180px', objectFit: 'cover' },
+  catLabel: { fontSize: '11px', fontWeight: 'bold', color: '#9f224e', textTransform: 'uppercase' },
+  postTitle: { margin: '10px 0', fontSize: '18px', fontWeight: 'bold' },
+  summary: { 
+    fontSize: '14px', 
+    color: '#666', 
+    display: '-webkit-box', 
+    WebkitLineClamp: 2, 
+    WebkitBoxOrient: 'vertical', 
+    overflow: 'hidden' 
+  }
+};
