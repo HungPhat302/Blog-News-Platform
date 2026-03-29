@@ -1,5 +1,32 @@
 const User = require("../models/User.model");
+const Post = require("../models/Post.model");
+const Category = require("../models/Category.model");
+const Tag = require("../models/Tag.model");
 const bcrypt = require("bcryptjs");
+
+exports.getStatistics = async (_req, res) => {
+  try {
+    const users = await User.countDocuments({});
+    const posts = await Post.countDocuments({});
+    const categories = await Category.countDocuments({});
+    const tags = await Tag.countDocuments({});
+
+    res.status(200).json({
+      message: "Get statistics successfully",
+      data: {
+        users,
+        posts,
+        categories,
+        tags
+      }
+    })
+  } catch(error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Internal server error"
+    })
+  }
+}
 
 exports.getUsers = async (req, res) => {
   const { page = 1, limit = 10, role, status } = req.query;

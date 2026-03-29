@@ -3,6 +3,8 @@ const controller = require("../controllers/admin.controller");
 const { verifyToken } = require("../middlewares/auth.middleware");
 const { allowRoles } = require("../middlewares/rbac.middleware");
 
+router.get("/statistics", verifyToken, allowRoles("admin"), controller.getStatistics);
+
 router.get("/users", verifyToken, allowRoles("admin"), controller.getUsers); //done
 router.get("/users/:id", verifyToken, allowRoles("admin"), controller.getUserById); //done
 router.post("/users", verifyToken, allowRoles("admin"), controller.createUser); //done
