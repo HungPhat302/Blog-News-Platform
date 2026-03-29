@@ -212,7 +212,7 @@ exports.createPost = async (req, res) => {
 exports.updatePost = async (req, res) => {
     try {
         const { id } = req.params;
-        let { title, content, category, tags, author } = req.body;
+        let { title, summary, content, category, tags, author } = req.body;
         let image;
         let slug;
 
@@ -226,9 +226,13 @@ exports.updatePost = async (req, res) => {
             }
         }
 
+        const cleanHtml = processContent(content);
+
         const updateData = {
             title,
-            content,
+            summary,
+            content_markdown: content,
+            content_html: cleanHtml,
             category,
             tags,
             author
