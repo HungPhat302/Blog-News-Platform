@@ -1,192 +1,117 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { postApi } from '../../api/post.api';
 import { interactionApi } from '../../api/interaction.api';
-import { useAuth } from '../../context/AuthContext';
 
 export default function ArticleDetail() {
-  const { id } = useParams(); // Lấy ID bài viết từ URL (ví dụ: /post/123 -> id = 123)
-  const navigate = useNavigate();
-  const { user } = useAuth(); // Lấy thông tin user hiện tại để check quyền bình luận
-
-  // 1. Quản lý trạng thái
+  const { id } = useParams();
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState('');
-  
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false); // Trạng thái khi đang gửi comment
 
-  // 2. Tải dữ liệu bài viết và bình luận khi mở trang
   useEffect(() => {
     const fetchPostAndComments = async () => {
       try {
         setLoading(true);
         
-        // Gọi song song 2 API cho lẹ: Lấy bài viết & Lấy bình luận
-        const [postRes, commentsRes] = await Promise.all([
-          postApi.getDetailPost(id),
-          interactionApi.getCommentsInPost(id)
-        ]);
+        // 1. CHỈ TẢI BÀI VIẾT TRƯỚC
+        const postRes = await postApi.getDetailPost(id);
+        const postData = postRes.data || postRes;
 
-        // Gán dữ liệu (tuỳ thuộc cấu trúc backend trả về, ở đây giả sử trả về .data)
-        setPost(postRes.data || postRes);
-        setComments(commentsRes.data || commentsRes || []);
-        
+        // 🛡️ BƯỚC BẢO VỆ FRONTEND (Không cần sửa Backend):
+        // Nếu Backend không trả về status, tự động gán là 'published'
+        // Nhờ vậy hàm .toUpperCase() ở dưới sẽ không bao giờ bị lỗi crash nữa!
+        postData.status = postData.status || 'published';
+
+        setPost(postData);
+
+        // 2. LOGIC THÔNG MINH: NẾU BÀI ĐÃ XUẤT BẢN THÌ MỚI TẢI COMMENT
+        if (postData.status === 'published') {
+          try {
+            const commentRes = await interactionApi.getCommentsByPost(id);
+            setComments(commentRes.data || []);
+          } catch (commentErr) {
+            console.error("Lỗi tải comment:", commentErr);
+          }
+        }
+
       } catch (err) {
-        setError('Không tìm thấy bài viết hoặc có lỗi xảy ra.');
         console.error(err);
+        setError('Không tìm thấy bài viết hoặc bạn không có quyền truy cập.');
       } finally {
         setLoading(false);
       }
     };
 
     fetchPostAndComments();
-  }, [id]); // Chạy lại nếu ID trên URL thay đổi
+  }, [id]);
 
-  // 3. Xử lý chức năng Lưu bài viết (Bookmark)
-  const handleBookmark = async () => {
-    if (!user) {
-      alert('Bạn cần đăng nhập để lưu bài viết!');
-      navigate('/login');
-      return;
-    }
-    
-    try {
-      await interactionApi.saveBookmark(id);
-      alert('Đã lưu bài viết thành công! Bạn có thể xem trong mục Đã lưu.');
-    } catch (err) {
-      alert(err.response?.data?.message || 'Có lỗi khi lưu bài viết.');
-    }
-  };
+  if (loading) return <div style={{ padding: '50px', textAlign: 'center' }}>Đang tải bài viết... ⏳</div>;
+  if (error || !post) return <div style={{ padding: '50px', textAlign: 'center', color: 'red', fontWeight: 'bold' }}>{error}</div>;
 
-  // 4. Xử lý chức năng Gửi bình luận
-  const handleCommentSubmit = async (e) => {
-    e.preventDefault();
-    if (!user) {
-      alert('Bạn cần đăng nhập để bình luận!');
-      navigate('/login');
-      return;
-    }
-
-    if (!newComment.trim()) return; // Không cho gửi bình luận trống
-
-    try {
-      setIsSubmitting(true);
-      
-      // Giả sử API yêu cầu gửi postId và content
-      await interactionApi.createComment({ 
-        postId: id, 
-        content: newComment 
-      });
-
-      // Gửi xong thì xóa khung nhập
-      setNewComment('');
-      
-      // Lấy lại danh sách bình luận mới nhất để hiển thị
-      const updatedComments = await interactionApi.getCommentsInPost(id);
-      setComments(updatedComments.data || updatedComments || []);
-      
-    } catch (err) {
-      alert(err.response?.data?.message || 'Không thể gửi bình luận lúc này.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  // 5. Giao diện khi đang tải hoặc lỗi
-  if (loading) return <div style={{ textAlign: 'center', padding: '50px' }}>Đang tải nội dung... ⏳</div>;
-  if (error || !post) return <div style={{ textAlign: 'center', padding: '50px', color: 'red' }}>{error}</div>;
-
-  // 6. Giao diện chính
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
+    <div style={{ maxWidth: '800px', margin: '40px auto', padding: '30px', backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
       
-      {/* Nút quay lại */}
-      <Link to="/" style={{ display: 'inline-block', marginBottom: '20px', textDecoration: 'none', color: '#007BFF' }}>
-        ← Quay lại trang chủ
-      </Link>
-
-      {/* --- PHẦN BÀI VIẾT --- */}
-      <article style={{ borderBottom: '2px solid #eee', paddingBottom: '30px', marginBottom: '30px' }}>
-        <h1 style={{ fontSize: '32px', marginBottom: '15px' }}>{post.title}</h1>
-        
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#666', marginBottom: '20px' }}>
-          <div>
-            <span>✍️ Tác giả: <strong>{post.author?.username || 'Ẩn danh'}</strong></span>
-            {/* Nếu backend có trả về createdAt thì format ngày tháng ở đây */}
-          </div>
-          
-          <button 
-            onClick={handleBookmark}
-            style={{ padding: '8px 15px', backgroundColor: '#f8f9fa', border: '1px solid #ddd', borderRadius: '4px', cursor: 'pointer' }}
-          >
-            🔖 Lưu bài viết
-          </button>
+      {/* ⚠️ HIỂN THỊ CẢNH BÁO NẾU LÀ BẢN NHÁP DÀNH CHO ADMIN/EDITOR */}
+      {post.status !== 'published' && (
+        <div style={{ padding: '12px 15px', backgroundColor: '#fff3cd', color: '#856404', borderRadius: '4px', marginBottom: '25px', fontWeight: 'bold', border: '1px solid #ffeeba' }}>
+          ⚠️ Đây là bản xem trước (Draft/Review). Bài viết này chưa được xuất bản ra công chúng.
         </div>
+      )}
 
-        {post.thumbnail && (
-          <img src={post.thumbnail} alt={post.title} style={{ width: '100%', maxHeight: '400px', objectFit: 'cover', borderRadius: '8px', marginBottom: '20px' }} />
-        )}
+      {/* TIÊU ĐỀ VÀ THÔNG TIN */}
+      <h1 style={{ fontSize: '32px', marginBottom: '15px', color: '#333', lineHeight: '1.4' }}>{post.title}</h1>
+      
+      <div style={{ color: '#666', fontSize: '15px', marginBottom: '25px', display: 'flex', gap: '20px', alignItems: 'center' }}>
+        <span>👤 Tác giả: <strong>{post.author?.username || 'Ẩn danh'}</strong></span>
+        <span>📁 Danh mục: <strong>{post.category?.name || 'Chưa phân loại'}</strong></span>
+        <span style={{ padding: '4px 8px', backgroundColor: '#e9ecef', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold' }}>{post.status.toUpperCase()}</span>
+      </div>
 
-        {/* Nội dung bài viết */}
-        <div style={{ fontSize: '18px', lineHeight: '1.8', color: '#333', whiteSpace: 'pre-wrap' }}>
-          {/* Lưu ý: Nếu post.content là mã HTML từ Rich Text Editor, bạn phải dùng dangerouslySetInnerHTML */}
-          {post.content}
-        </div>
-      </article>
+      {/* ẢNH BÌA */}
+      {post.image && (
+        <img src={post.image} alt={post.title} style={{ width: '100%', maxHeight: '450px', objectFit: 'cover', borderRadius: '8px', marginBottom: '30px' }} />
+      )}
 
-      {/* --- PHẦN BÌNH LUẬN --- */}
-      <section>
-        <h3 style={{ fontSize: '24px', marginBottom: '20px' }}>💬 Bình luận ({comments.length})</h3>
-        
-        {/* Form nhập bình luận */}
-        <div style={{ marginBottom: '30px', padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
-          {!user ? (
-            <p style={{ margin: 0 }}>
-              Vui lòng <Link to="/login" style={{ color: '#007BFF' }}>Đăng nhập</Link> để tham gia bình luận.
-            </p>
-          ) : (
-            <form onSubmit={handleCommentSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <textarea 
-                rows="3"
-                placeholder="Chia sẻ suy nghĩ của bạn về bài viết này..."
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #ccc', resize: 'vertical' }}
-                required
-              />
-              <button 
-                type="submit" 
-                disabled={isSubmitting || !newComment.trim()}
-                style={{ alignSelf: 'flex-end', padding: '10px 20px', backgroundColor: '#28a745', color: '#fff', border: 'none', borderRadius: '4px', cursor: isSubmitting ? 'not-allowed' : 'pointer' }}
-              >
-                {isSubmitting ? 'Đang gửi...' : 'Gửi bình luận'}
-              </button>
-            </form>
-          )}
-        </div>
+      {/* NỘI DUNG */}
+      <div style={{ fontSize: '17px', lineHeight: '1.8', color: '#444', marginBottom: '40px' }}>
+        <p style={{ fontWeight: 'bold', fontStyle: 'italic', marginBottom: '25px', fontSize: '18px' }}>{post.summary}</p>
+        <div style={{ whiteSpace: 'pre-line' }}>{post.content}</div>
+      </div>
 
-        {/* Danh sách bình luận */}
-        <div>
+      {/* THẺ (TAGS) */}
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '40px', flexWrap: 'wrap' }}>
+        {post.tags?.map(tag => (
+          <span key={tag._id || tag} style={{ padding: '6px 12px', backgroundColor: '#f1f3f5', borderRadius: '20px', fontSize: '14px', color: '#495057', fontWeight: '500' }}>
+            #{tag.name || tag}
+          </span>
+        ))}
+      </div>
+
+      {/* KHU VỰC BÌNH LUẬN - CHỈ HIỆN KHI ĐÃ PUBLISH */}
+      {post.status === 'published' && (
+        <div style={{ borderTop: '2px solid #eee', paddingTop: '30px' }}>
+          <h3 style={{ marginBottom: '20px' }}>💬 Bình luận ({comments.length})</h3>
           {comments.length === 0 ? (
-            <p style={{ color: '#666', fontStyle: 'italic' }}>Chưa có bình luận nào. Hãy là người đầu tiên!</p>
+            <p style={{ color: '#888', fontStyle: 'italic' }}>Chưa có bình luận nào. Hãy là người đầu tiên!</p>
           ) : (
-            comments.map((cmt) => (
-              <div key={cmt._id} style={{ padding: '15px 0', borderBottom: '1px solid #eee' }}>
-                <div style={{ fontWeight: 'bold', marginBottom: '5px' }}>
-                  👤 {cmt.user?.username || 'Người dùng ẩn danh'}
-                </div>
-                <div style={{ color: '#333' }}>
-                  {cmt.content}
-                </div>
+            comments.map(c => (
+              <div key={c._id} style={{ marginBottom: '15px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px solid #eee' }}>
+                <strong style={{ color: '#007bff' }}>{c.user?.username || 'Người dùng ẩn danh'}</strong>
+                <p style={{ margin: '8px 0 0 0', color: '#333' }}>{c.content}</p>
               </div>
             ))
           )}
         </div>
-      </section>
-
+      )}
+      
+      {/* NÚT QUAY LẠI MÀN HÌNH DASHBOARD */}
+      <div style={{ marginTop: '30px', textAlign: 'center', borderTop: '1px dashed #ccc', paddingTop: '20px' }}>
+         <button onClick={() => window.history.back()} style={{ padding: '10px 20px', backgroundColor: '#6c757d', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>
+           ⬅ Quay lại
+         </button>
+      </div>
     </div>
   );
 }

@@ -12,16 +12,18 @@ export default function PostList() {
   const fetchPosts = async () => {
     try {
       setLoading(true);
-      // Nếu là Admin/Editor thì gọi API lấy tất cả bài kèm trạng thái duyệt
-      // Nếu là Author thì tạm thời gọi API public (hoặc API riêng nếu backend có)
-      const response = ['admin', 'editor'].includes(user.role) 
-        ? await postApi.getPostsWithReviewStatus()
-        : await postApi.getPosts(); // Đáng lý ra backend cần có API "get-my-posts" cho author
-      
-      const dataList = response.data || response.posts || response || [];
-      setPosts(dataList);
+      let res;
+      // Nếu là Editor -> Gọi API lấy bài chờ duyệt
+      if (user.role === 'editor') {
+        res = await postApi.getEditorPosts();
+      } else {
+        // Nếu là Admin/Author -> Gọi API lấy bài bình thường
+        res = await postApi.getPosts(); 
+      }
+      setPosts(res.data || []);
     } catch (error) {
-      console.error('Lỗi khi tải danh sách bài viết:', error);
+      console.error(error);
+      alert('Lỗi khi lấy danh sách bài viết!');
     } finally {
       setLoading(false);
     }

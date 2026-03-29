@@ -3,7 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import { authApi } from '../../api/auth.api';
 
 export default function Profile() {
-  const { user, setUser } = useAuth(); // Lấy thông tin user hiện tại và hàm cập nhật
+  const { user } = useAuth(); // Lấy thông tin user hiện tại và hàm cập nhật
   const [isUpgrading, setIsUpgrading] = useState(false);
   const [message, setMessage] = useState('');
 
@@ -18,14 +18,21 @@ export default function Profile() {
     setMessage('');
 
     try {
-      // 1. Gọi API Backend để đổi role trong Database
+      // 1. Gọi API đổi role trong Database
       await authApi.upgradeToAuthor();
       
-      // 2. Gọi lại API lấy thông tin Profile mới nhất để đồng bộ Frontend
-      const res = await authApi.getUserInfo();
-      setUser(res.data || res.user || res); // Header sẽ tự động xuất hiện nút Dashboard
+      // 2. Ép xoá Token cũ (Vì Token cũ đang ghi nhớ Role = Reader)
+      localStorage.removeItem('accessToken'); 
+      // Xoá luôn RefreshToken để đảm bảo đăng nhập lại từ đầu cho sạch sẽ
+      localStorage.removeItem('refreshToken');
       
-      setMessage('🎉 Chúc mừng! Bạn đã chính thức trở thành Tác giả. Nút "Dashboard" đã xuất hiện trên thanh điều hướng.');
+      setMessage('🎉 Chúc mừng! Bạn đã chính thức trở thành Tác giả. Hệ thống sẽ tự động chuyển hướng để cập nhật quyền hạn mới...');
+      
+      // 3. Đợi 2 giây cho người dùng đọc dòng thông báo, sau đó đá họ ra trang Login
+      setTimeout(() => {
+        window.location.href = '/login'; 
+      }, 2000);
+
     } catch (error) {
       console.error(error);
       setMessage('❌ Có lỗi xảy ra khi nâng cấp tài khoản. Vui lòng thử lại sau.');
