@@ -83,25 +83,45 @@ exports.deleteUser = async (req, res) => {
 };
 
 exports.updateRole = async (req, res) => {
-  const { role } = req.body;
+  try {
+    const { role } = req.body;
 
-  const user = await User.findByIdAndUpdate(
-    req.params.id,
-    { role },
-    { new: true }
-  );
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { role },
+      { new: true }
+    );
 
-  res.json(user);
+    res.status(201).json({
+      message: "Update role successfully",
+      data: user
+    });
+  } catch(error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Internal server error"
+    })
+  }
 };
 
 exports.updateStatus = async (req, res) => {
-  const { isActive } = req.body;
+  try {
+    const { isActive } = req.body;
 
-  const user = await User.findByIdAndUpdate(
-    req.params.id,
-    { isActive },
-    { new: true }
-  );
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { isActive },
+      { new: true }
+    );
 
-  res.json(user);
+    res.status(201).json({
+      message: "Update status successfully",
+      data: user
+    });
+  } catch(error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Internal server error"
+    })
+  }
 };
