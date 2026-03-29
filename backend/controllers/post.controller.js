@@ -23,11 +23,9 @@ exports.getPosts = async (req, res) => {
         const skip = (page - 1) * limit;
         
         // 3. Build filter object
-        let filter = {};
-
-        if (status) {
-            filter.status = status;
-        }
+        let filter = {
+            status: "published"
+        };
 
         if (author) {
             filter.author = author;
@@ -44,7 +42,7 @@ exports.getPosts = async (req, res) => {
             [sortBy]: order === "desc" ? -1 : 1
         };
 
-        const posts = await Post.find().sort(sortOption).skip(skip).limit(parseInt(limit));
+        const posts = await Post.find(filter).sort(sortOption).skip(skip).limit(parseInt(limit));
 
         return res.status(200).json({
             message: "Successfully to get posts",
