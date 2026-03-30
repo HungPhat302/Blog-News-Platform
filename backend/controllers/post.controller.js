@@ -14,6 +14,7 @@ exports.getPosts = async (req, res) => {
             sortBy = "createdAt",
             order = "desc",
             author,
+            status,
             fromDate,
             toDate
         } = req.query;
@@ -22,10 +23,11 @@ exports.getPosts = async (req, res) => {
         const skip = (page - 1) * limit;
         
         // 3. Build filter object
-        let filter = {
-            status: "published"
-        };
+        let filter = {};
 
+        if (status) {
+            filter.status = status;
+        }
         if (author) {
             filter.author = author;
         }
