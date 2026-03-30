@@ -13,7 +13,6 @@ exports.getPosts = async (req, res) => {
             limit = 10,
             sortBy = "createdAt",
             order = "desc",
-            status,
             author,
             fromDate,
             toDate
@@ -161,9 +160,17 @@ exports.getPostByKeyword = async (req, res) => {
 exports.createPost = async (req, res) => {
     try {
 
-        const { title, summary, content, category, tags, author} = req.body;
+        const { title, summary, content, category, tags } = req.body;
+
+        const userid = req.user.userId;
 
         let slug = await GenerateSlug.generateSlug(title);
+
+        if (tags) {
+            if (!Array.isArray(tags)) {
+                tags = [tags];
+            }
+        }
 
         if (!slug) {
             return res.status(500).json({
@@ -175,8 +182,8 @@ exports.createPost = async (req, res) => {
 
         const imageurl = req.file ? req.file.path : null;
 
-        if(!title || !content || !author) {
-            res.status(400).json({
+        if(!title || !content) {
+            return res.status(400).json({
                 message: "Doesn't enough data to create post"
             });
         }
@@ -189,7 +196,7 @@ exports.createPost = async (req, res) => {
             slug,
             category,
             tags,
-            author,
+            author: userid,
             image: imageurl
         });
 
@@ -200,6 +207,7 @@ exports.createPost = async (req, res) => {
             data: post
         });
     } catch(error) {
+        console.log(error);
         res.status(500).json({
             message: "Internal server error"
         });
@@ -210,7 +218,7 @@ exports.createPost = async (req, res) => {
 exports.updatePost = async (req, res) => {
     try {
         const { id } = req.params;
-        let { title, summary, content, category, tags, author } = req.body;
+        let { title, summary, content, category, tags } = req.body;
         let image;
         let slug;
 
@@ -232,8 +240,7 @@ exports.updatePost = async (req, res) => {
             content_markdown: content,
             content_html: cleanHtml,
             category,
-            tags,
-            author
+            tags
         };
 
         if (slug) {
@@ -245,7 +252,7 @@ exports.updatePost = async (req, res) => {
             updateData.image = req.file.path;
         }
 
-        if (!title && !content && !author && !category && !image) {
+        if (!title && !content && !category && !image) {
             return res.status(400).json({
                 message: "Doesn't have any data to update"
             });
