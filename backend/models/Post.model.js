@@ -7,6 +7,10 @@ const postSchema = new mongoose.Schema(
             required: true,
             trim: true,
         },
+        summary: {
+            type: String,
+            required: true,
+        },
         content_markdown: {
             type: String,
             required: true,
@@ -41,8 +45,9 @@ const postSchema = new mongoose.Schema(
             default: "draft"
         },
         author: {
-            type: String, 
-            required: true,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true
         },
         publishdate: {
             type: Date,
