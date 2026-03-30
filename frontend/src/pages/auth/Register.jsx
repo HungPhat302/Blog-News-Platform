@@ -1,113 +1,120 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { authApi } from "../../api/auth.api";
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { authApi } from '../../api/auth.api';
 
 export default function Register() {
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-    confirmpassword: "",
-  });
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+    confirmpassword: '', // <-- Đã thêm trường này để khớp với Backend
+  });
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    setSuccess("");
+    setIsLoading(true);
+    setError('');
 
+    // Kiểm tra nhanh ở Frontend trước khi gửi lên Backend
     if (formData.password !== formData.confirmpassword) {
-      return setError("Mật khẩu xác nhận không khớp!");
+      setError('Mật khẩu xác nhận không khớp!');
+      setIsLoading(false);
+      return;
     }
 
-    setLoading(true);
     try {
       await authApi.register(formData);
-      setSuccess("Đăng ký thành công! Đang chuyển hướng đến đăng nhập...");
-      setTimeout(() => navigate("/login"), 2000);
+      alert('Đăng ký thành công! Vui lòng đăng nhập.');
+      navigate('/login');
     } catch (err) {
-      setError(err.response?.data?.message || "Có lỗi xảy ra khi đăng ký.");
+      setError(err.response?.data?.message || 'Có lỗi xảy ra hoặc email đã được sử dụng!');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-extrabold text-gray-900">Đăng ký</h2>
-          <p className="mt-2 text-sm text-gray-600">Tạo tài khoản mới</p>
+    <div style={{ maxWidth: '450px', margin: '50px auto', padding: '30px', border: '1px solid #ccc', borderRadius: '8px', backgroundColor: '#fff', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
+      <h2 style={{ textAlign: 'center', marginBottom: '10px' }}>Đăng Ký Tài Khoản</h2>
+      
+      <div style={{ backgroundColor: '#e9ecef', padding: '12px', borderRadius: '6px', marginBottom: '20px', fontSize: '13px', color: '#495057' }}>
+        💡 <strong>Lưu ý:</strong> Tài khoản mới tạo sẽ mặc định là <strong>Độc giả (Reader)</strong>. Để có quyền viết bài, bạn có thể thăng cấp lên <strong>Tác giả (Author)</strong> hoàn toàn miễn phí tại trang Hồ Sơ (Profile) sau khi đăng nhập.
+      </div>
+      
+      {error && <p style={{ color: 'red', backgroundColor: '#f8d7da', padding: '10px', borderRadius: '4px' }}>{error}</p>}
+      
+      <form onSubmit={handleSubmit}>
+        <div style={{ marginBottom: '15px' }}>
+          <label style={{ fontWeight: 'bold' }}>Tên hiển thị:</label>
+          <input 
+            type="text" 
+            name="username" 
+            value={formData.username} 
+            onChange={handleChange} 
+            required 
+            placeholder="Ví dụ: Nguyễn Văn A..."
+            style={{ width: '100%', padding: '10px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ccc', boxSizing: 'border-box' }}
+          />
         </div>
 
-        {error && <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm">{error}</div>}
-        {success && <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg text-sm">{success}</div>}
+        <div style={{ marginBottom: '15px' }}>
+          <label style={{ fontWeight: 'bold' }}>Email:</label>
+          <input 
+            type="email" 
+            name="email" 
+            value={formData.email} 
+            onChange={handleChange} 
+            required 
+            placeholder="email@example.com"
+            style={{ width: '100%', padding: '10px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ccc', boxSizing: 'border-box' }}
+          />
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Tên hiển thị (Username)</label>
-            <input
-              type="text"
-              required
-              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition"
-              value={formData.username}
-              onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-            />
-          </div>
+        <div style={{ marginBottom: '15px' }}>
+          <label style={{ fontWeight: 'bold' }}>Mật khẩu:</label>
+          <input 
+            type="password" 
+            name="password" 
+            value={formData.password} 
+            onChange={handleChange} 
+            required 
+            placeholder="Nhập ít nhất 6 ký tự..."
+            style={{ width: '100%', padding: '10px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ccc', boxSizing: 'border-box' }}
+          />
+        </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
-            <input
-              type="email"
-              required
-              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            />
-          </div>
+        {/* <-- Bổ sung thêm Ô nhập Xác nhận mật khẩu --> */}
+        <div style={{ marginBottom: '20px' }}>
+          <label style={{ fontWeight: 'bold' }}>Xác nhận mật khẩu:</label>
+          <input 
+            type="password" 
+            name="confirmpassword" 
+            value={formData.confirmpassword} 
+            onChange={handleChange} 
+            required 
+            placeholder="Nhập lại mật khẩu..."
+            style={{ width: '100%', padding: '10px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ccc', boxSizing: 'border-box' }}
+          />
+        </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Mật khẩu</label>
-            <input
-              type="password"
-              required
-              minLength="6"
-              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition"
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-            />
-          </div>
+        <button disabled={isLoading} type="submit" style={{ width: '100%', padding: '12px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>
+          {isLoading ? 'Đang xử lý...' : 'Đăng Ký Ngay'}
+        </button>
+      </form>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Xác nhận mật khẩu</label>
-            <input
-              type="password"
-              required
-              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition"
-              value={formData.confirmpassword}
-              onChange={(e) => setFormData({ ...formData, confirmpassword: e.target.value })}
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 transition"
-          >
-            {loading ? "Đang xử lý..." : "Đăng ký"}
-          </button>
-        </form>
-
-        <p className="mt-6 text-center text-sm text-gray-600">
-          Đã có tài khoản?{" "}
-          <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
-            Đăng nhập
-          </Link>
-        </p>
-      </div>
+      <p style={{ marginTop: '20px', textAlign: 'center', fontSize: '14px' }}>
+        Đã có tài khoản? <Link to="/login" style={{ color: '#007BFF', fontWeight: 'bold', textDecoration: 'none' }}>Đăng nhập</Link>
+      </p>
     </div>
   );
 }

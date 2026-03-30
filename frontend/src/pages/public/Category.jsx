@@ -1,166 +1,180 @@
-// File: src/pages/public/Category.jsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import axiosClient from '../../api/axiosClient';
-
-// Cấu hình tiêu đề và mô tả cho từng thể loại
-const CATEGORY_INFO = {
-  technology: { title: "Technology", desc: "Latest news and insights on innovation, science, and the digital world" },
-  world: { title: "World", desc: "Global news, international relations, and major events happening around the globe" },
-  politics: { title: "Politics", desc: "In-depth political analysis, elections, and government policies" },
-  business: { title: "Business", desc: "Markets, finance, corporate news, and economic trends" },
-  science: { title: "Science", desc: "Discoveries, space exploration, and scientific breakthroughs" },
-  health: { title: "Health", desc: "Medical research, wellness, and public health news" },
-  sports: { title: "Sports", desc: "Scores, highlights, and updates from the world of sports" },
-  culture: { title: "Culture", desc: "Arts, entertainment, lifestyle, and societal trends" },
-};
+import { postApi } from '../../api/post.api';
+import { taxonomyApi } from '../../api/taxonomy.api';
 
 export default function Category() {
-  const { slug } = useParams(); // Lấy chữ 'technology', 'world'... từ thanh địa chỉ URL
-  const currentCategory = CATEGORY_INFO[slug] || { title: slug, desc: `Explore articles about ${slug}` };
-
+  const { slug } = useParams(); 
   const [articles, setArticles] = useState([]);
-  const [isApiError, setIsApiError] = useState(false);
+  const [categories, setCategories] = useState([]); // Danh sách cho thanh bar
+  const [categoryInfo, setCategoryInfo] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+  const scrollRef = useRef(null);
 
   useEffect(() => {
-    // Cuộn lên đầu trang khi chuyển thể loại
-    window.scrollTo(0, 0); 
-    
-    // Gọi API lấy bài viết theo category slug
-    axiosClient.get(`/posts?category=${slug}`)
-      .then((res) => {
-        const posts = res.data?.data || res.data;
-        if (posts && posts.length > 0) {
-          setArticles(posts);
-          setIsApiError(false);
-        } else {
-          setIsApiError(true);
+    const fetchCategoryData = async () => {
+      try {
+        setLoading(true);
+        setIsError(false);
+        window.scrollTo(0, 0);
+
+        // 1. Lấy tất cả danh mục để hiển thị thanh Bar và tìm danh mục hiện tại
+        const catRes = await taxonomyApi.getCategories();
+        const allCategories = catRes.data || [];
+        setCategories(allCategories);
+
+        const currentCat = allCategories.find(c => c.slug === slug);
+
+        if (!currentCat) {
+          setIsError(true);
+          setLoading(false);
+          return;
         }
-      })
-      .catch((err) => {
-        console.error("Lỗi lấy bài viết:", err);
-        setIsApiError(true);
-      });
+
+        setCategoryInfo(currentCat);
+
+        // 2. Lấy bài viết theo ID danh mục và trạng thái 'published'
+        const postsRes = await postApi.getPosts({ 
+          category: currentCat._id, 
+          status: 'published' 
+        });
+        
+        setArticles(postsRes.data || []);
+      } catch (err) {
+        console.error("Lỗi lấy dữ liệu category:", err);
+        setIsError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategoryData();
   }, [slug]);
 
-  // Tách bài viết đầu tiên làm bài Nổi bật (Featured), phần còn lại làm lưới (Grid)
-  const featuredArticle = articles.length > 0 ? articles[0] : null;
-  const gridArticles = articles.length > 1 ? articles.slice(1) : [];
+  // Hàm cuộn ngang thanh điều hướng
+  const scroll = (direction) => {
+    if (scrollRef.current) {
+      const { scrollLeft } = scrollRef.current;
+      const scrollTo = direction === 'left' ? scrollLeft - 200 : scrollLeft + 200;
+      scrollRef.current.scrollTo({ left: scrollTo, behavior: 'smooth' });
+    }
+  };
+
+  if (loading) return <div className="text-center py-20">Đang tải bài viết... ⏳</div>;
+
+  if (isError || articles.length === 0) {
+    return (
+      <div className="text-center py-20">
+        <h2 className="text-2xl font-bold text-gray-600">Không tìm thấy bài viết nào trong danh mục này.</h2>
+        <Link to="/" className="text-blue-600 hover:underline mt-4 block">Quay lại trang chủ</Link>
+      </div>
+    );
+  }
+
+  const featuredArticle = articles[0];
+  const gridArticles = articles.slice(1);
 
   return (
-    <main className="max-w-[1400px] mx-auto px-6 py-8 min-h-screen">
+    <main style={{ maxWidth: '1400px', margin: '0 auto', paddingBottom: '40px' }}>
       
-      {/* 1. Header của Thể loại */}
-      <div className="mb-8 pb-6 border-b border-border text-center md:text-left">
-        <h1 className="text-5xl mb-3 font-serif capitalize">{currentCategory.title}</h1>
-        <p className="text-lg text-muted-foreground">{currentCategory.desc}</p>
-      </div>
+      {/* 1. Category Bar (Mang theo từ trang Home) */}
+      <nav style={styles.navWrapper}>
+        <button onClick={() => scroll('left')} style={styles.scrollBtn}>❮</button>
+        <ul ref={scrollRef} style={styles.categoryList}>
+          <li style={styles.navItem}>
+            <Link to="/" style={styles.navLink}>🏠 Trang chủ</Link>
+          </li>
+          {categories.map(cat => (
+            <li key={cat._id} style={styles.navItem}>
+              <Link 
+                to={`/category/${cat.slug}`} 
+                style={cat.slug === slug ? styles.navLinkActive : styles.navLink}
+              >
+                {cat.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <button onClick={() => scroll('right')} style={styles.scrollBtn}>❯</button>
+      </nav>
 
-      {isApiError || articles.length === 0 ? (
-        /* ================== GIAO DIỆN TĨNH KHI API LỖI ================== */
-        <>
-          <section className="mb-12 pb-12 border-b border-border">
-            <Link className="group" to="/article/1">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div className="aspect-[4/3] bg-gray-200 rounded overflow-hidden">
-                  <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=600&fit=crop" alt="Featured" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                </div>
-                <div className="flex flex-col justify-center">
-                  <span className="text-sm uppercase tracking-wider text-blue-600 mb-3 block">Featured</span>
-                  <h2 className="text-4xl mb-4 group-hover:text-blue-600 transition-colors leading-tight font-serif">
-                    The Future of Artificial Intelligence: How Machine Learning is Reshaping Our World
-                  </h2>
-                  <p className="text-lg text-muted-foreground mb-4 leading-relaxed">
-                    As AI continues to advance at an unprecedented pace, experts discuss the implications for society, economy, and human creativity in the coming decade.
-                  </p>
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <span>By Sarah Chen</span><span>•</span><time>March 18, 2026</time><span>•</span><span>8 min read</span>
-                  </div>
-                </div>
+      <div style={{ padding: '0 20px' }}>
+        {/* 2. Header Thể loại */}
+        <div style={{ margin: '40px 0', textAlign: 'center', borderBottom: '1px solid #eee', paddingBottom: '20px' }}>
+          <h1 style={{ fontSize: '42px', fontWeight: 'bold', color: '#333', textTransform: 'capitalize' }}>
+            {categoryInfo?.name || slug}
+          </h1>
+          <p style={{ color: '#888', fontStyle: 'italic', marginTop: '10px' }}>
+            {categoryInfo?.description || `Tất cả bài viết thuộc chủ đề ${categoryInfo?.name}`}
+          </p>
+        </div>
+
+        {/* 3. Bài viết Nổi bật */}
+        <section style={{ marginBottom: '50px', paddingBottom: '50px', borderBottom: '1px solid #eee' }}>
+          <Link to={`/post/${featuredArticle._id}`} style={{ textDecoration: 'none', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
+            <img 
+              src={featuredArticle.image || "https://placehold.co/800x600"} 
+              alt={featuredArticle.title} 
+              style={{ width: '100%', height: '400px', objectFit: 'cover', borderRadius: '12px' }} 
+            />
+            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+              <span style={{ color: '#007bff', fontWeight: 'bold', fontSize: '14px' }}>MỚI NHẤT</span>
+              <h2 style={{ fontSize: '32px', color: '#222', margin: '15px 0' }}>{featuredArticle.title}</h2>
+              <p style={{ color: '#666', lineHeight: '1.6' }}>{featuredArticle.summary}</p>
+              <div style={{ marginTop: '20px', color: '#999', fontSize: '14px' }}>
+                <span>✍️ {featuredArticle.author?.username || "Tác giả"}</span> • 
+                <time> {new Date(featuredArticle.createdAt).toLocaleDateString('vi-VN')}</time>
+              </div>
+            </div>
+          </Link>
+        </section>
+
+        {/* 4. Lưới bài viết */}
+        <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '40px' }}>
+          {gridArticles.map((article) => (
+            <Link key={article._id} to={`/post/${article._id}`} style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column' }}>
+              <img 
+                src={article.image || "https://placehold.co/600x400"} 
+                alt={article.title} 
+                style={{ width: '100%', height: '220px', objectFit: 'cover', borderRadius: '8px', marginBottom: '15px' }} 
+              />
+              <h3 style={{ fontSize: '20px', color: '#222', fontWeight: 'bold', marginBottom: '10px' }}>{article.title}</h3>
+              <p style={{ color: '#666', fontSize: '14px', flex: 1 }}>{article.summary}</p>
+              <div style={{ marginTop: '15px', paddingTop: '15px', borderTop: '1px solid #f0f0f0', fontSize: '13px', color: '#999' }}>
+                {article.author?.username || "Tác giả"} • {new Date(article.createdAt).toLocaleDateString('vi-VN')}
               </div>
             </Link>
-          </section>
-
-          <section>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[2, 3, 4, 5, 6, 7].map((id) => (
-                <Link key={id} className="group" to={`/article/${id}`}>
-                  <article className="h-full flex flex-col">
-                    <div className="mb-4 aspect-[16/10] bg-gray-200 rounded overflow-hidden">
-                      <img src={`https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&h=400&fit=crop&seed=${id}`} alt="Thumb" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                    </div>
-                    <h3 className="text-xl mb-3 group-hover:text-blue-600 transition-colors leading-snug font-medium">
-                      Sample Title for {currentCategory.title} Article {id}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-4 leading-relaxed flex-1">
-                      This is a short summary of the article to give readers an idea of what to expect before they click.
-                    </p>
-                    <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                      <span>Author Name</span><span>•</span><time>March 17, 2026</time>
-                    </div>
-                  </article>
-                </Link>
-              ))}
-            </div>
-          </section>
-        </>
-      ) : (
-        /* ================== GIAO DIỆN THẬT LẤY TỪ API ================== */
-        <>
-          {featuredArticle && (
-            <section className="mb-12 pb-12 border-b border-border">
-              <Link className="group" to={`/article/${featuredArticle._id}`}>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  <div className="aspect-[4/3] bg-gray-200 rounded overflow-hidden">
-                    <img src={featuredArticle.coverImage || "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=600&fit=crop"} alt="Featured" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  </div>
-                  <div className="flex flex-col justify-center">
-                    <span className="text-sm uppercase tracking-wider text-blue-600 mb-3 block">Featured</span>
-                    <h2 className="text-4xl mb-4 group-hover:text-blue-600 transition-colors leading-tight font-serif">
-                      {featuredArticle.title}
-                    </h2>
-                    <p className="text-lg text-muted-foreground mb-4 leading-relaxed line-clamp-3">
-                      {featuredArticle.excerpt || "No description available for this article."}
-                    </p>
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <span>{featuredArticle.author?.name || "Admin"}</span><span>•</span><time>{new Date(featuredArticle.createdAt).toLocaleDateString()}</time>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            </section>
-          )}
-
-          <section>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {gridArticles.map((article) => (
-                <Link key={article._id} className="group" to={`/article/${article._id}`}>
-                  <article className="h-full flex flex-col">
-                    <div className="mb-4 aspect-[16/10] bg-gray-200 rounded overflow-hidden">
-                      <img src={article.coverImage || `https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&h=400&fit=crop&seed=${article._id}`} alt="Thumb" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                    </div>
-                    <h3 className="text-xl mb-3 group-hover:text-blue-600 transition-colors leading-snug font-medium line-clamp-2">
-                      {article.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-4 leading-relaxed flex-1 line-clamp-3">
-                      {article.excerpt}
-                    </p>
-                    <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                      <span>{article.author?.name || "Admin"}</span><span>•</span><time>{new Date(article.createdAt).toLocaleDateString()}</time>
-                    </div>
-                  </article>
-                </Link>
-              ))}
-            </div>
-          </section>
-        </>
-      )}
-
-      <div className="mt-12 text-center">
-        <button className="px-8 py-3 border border-border rounded hover:bg-gray-50 transition-colors font-medium">
-          Load More Articles
-        </button>
+          ))}
+        </section>
       </div>
     </main>
   );
 }
+
+const styles = {
+  navWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    borderBottom: '1px solid #ddd',
+    backgroundColor: '#fff',
+    position: 'sticky',
+    top: '0',
+    zIndex: 100,
+    padding: '0 10px'
+  },
+  categoryList: {
+    display: 'flex',
+    overflowX: 'auto',
+    listStyle: 'none',
+    margin: 0,
+    padding: '12px 0',
+    flex: 1,
+    scrollbarWidth: 'none',
+    msOverflowStyle: 'none',
+  },
+  navItem: { whiteSpace: 'nowrap', padding: '0 15px' },
+  navLink: { textDecoration: 'none', color: '#555', fontWeight: '500' },
+  navLinkActive: { textDecoration: 'none', color: '#9f224e', fontWeight: 'bold' },
+  scrollBtn: { background: 'none', border: 'none', fontSize: '18px', cursor: 'pointer', padding: '10px', color: '#aaa' }
+};

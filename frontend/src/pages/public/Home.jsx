@@ -1,90 +1,167 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { postApi } from '../../api/post.api';
+import { taxonomyApi } from '../../api/taxonomy.api'; //
 
 export default function Home() {
+  const [posts, setPosts] = useState([]);
+  const [categories, setCategories] = useState([]); //
+  const [loading, setLoading] = useState(true);
+  const scrollRef = useRef(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        // Lấy bài viết và danh mục cùng lúc
+        const [postsRes, catsRes] = await Promise.all([
+          postApi.getPosts(),
+          taxonomyApi.getCategories() //
+        ]);
+
+        const allPosts = postsRes.data || [];
+        setPosts(allPosts.filter(post => post.status === 'published'));
+        setCategories(catsRes.data || []);
+      } catch (error) {
+        console.error('Lỗi lấy dữ liệu trang chủ:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // Hàm hỗ trợ cuộn ngang bằng nút (giống prev/next-nav)
+  const scroll = (direction) => {
+    if (scrollRef.current) {
+      const { scrollLeft } = scrollRef.current;
+      const scrollTo = direction === 'left' ? scrollLeft - 200 : scrollLeft + 200;
+      scrollRef.current.scrollTo({ left: scrollTo, behavior: 'smooth' });
+    }
+  };
+
   return (
-    <main className="max-w-[1400px] mx-auto px-6 py-8">
-      {/* 1. KHU VỰC BÀI VIẾT NỔI BẬT */}
-      <section className="mb-12 pb-12 border-b border-border">
-        <Link className="group" to="/article/1">
-          <div className="mb-6 aspect-[2/1] bg-gray-200 rounded overflow-hidden">
-            <img 
-              src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&h=600&fit=crop" 
-              alt="AI Future" 
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-            />
-          </div>
-          <div className="max-w-3xl">
-            <span className="text-sm uppercase tracking-wider text-blue-600 mb-2 block">Technology</span>
-            <h1 className="text-5xl mb-4 group-hover:text-blue-600 transition-colors">
-              The Future of Artificial Intelligence: How Machine Learning is Reshaping Our World
-            </h1>
-            <p className="text-xl text-muted-foreground mb-4 leading-relaxed">
-              As AI continues to advance at an unprecedented pace, experts discuss the implications for society, economy, and human creativity in the coming decade.
-            </p>
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              <span>By Sarah Chen</span><span>•</span><time>March 18, 2026</time><span>•</span><span>8 min read</span>
-            </div>
-          </div>
-        </Link>
-      </section>
-
-      {/* 2. TOP STORIES */}
-      <section className="mb-12 pb-12 border-b border-border">
-        <h2 className="text-2xl mb-6 font-medium">Top Stories</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            { id: 2, title: "Global Climate Summit Reaches Historic Agreement", category: "World", author: "James Wilson" },
-            { id: 3, title: "New Quantum Computing Breakthrough Announced", category: "Technology", author: "Dr. Emily Rodriguez" },
-            { id: 4, title: "Economic Recovery Shows Strong Momentum", category: "Business", author: "Michael Chang" }
-          ].map((item) => (
-            <Link key={item.id} className="group" to={`/article/${item.id}`}>
-              <div className="mb-4 aspect-[16/10] bg-gray-200 rounded overflow-hidden">
-                <img 
-                  src={`https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&h=400&fit=crop&seed=${item.id}`} 
-                  alt={item.title} 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                />
-              </div>
-              <span className="text-xs uppercase tracking-wider text-blue-600 mb-2 block">{item.category}</span>
-              <h3 className="text-xl mb-3 group-hover:text-blue-600 transition-colors leading-snug font-medium">
-                {item.title}
-              </h3>
-              <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                <span>{item.author}</span><span>•</span><time>March 17, 2026</time>
-              </div>
-            </Link>
+    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
+      
+      {/* 1. Category Navigation Bar (Phong cách VnExpress) */}
+      <nav style={styles.navWrapper}>
+        <button onClick={() => scroll('left')} style={styles.scrollBtn}>❮</button>
+        
+        <ul ref={scrollRef} style={styles.categoryList}>
+          <li style={styles.navItem}>
+            <Link to="/" style={styles.navLinkActive}>🏠 Trang chủ</Link>
+          </li>
+          
+          
+          {categories.map(cat => (
+            <li key={cat._id} style={styles.navItem}>
+              <Link to={`/category/${cat.slug}`} style={styles.navLink}>
+                {cat.name}
+              </Link>
+            </li>
           ))}
-        </div>
-      </section>
+        </ul>
 
-      {/* 3. LATEST NEWS */}
-      <section>
-        <h2 className="text-2xl mb-6 font-medium">Latest News</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {[
-            { id: 5, category: "Science", title: "Advances in Gene Therapy Show Promise for Rare Diseases", author: "Dr. Rachel Kim" },
-            { id: 6, category: "Business", title: "The Rise of Remote Work: Five Years Later", author: "Tom Anderson" },
-            { id: 7, category: "Culture", title: "Major Archaeological Discovery in Mediterranean", author: "Isabella Martinez" },
-            { id: 8, category: "Technology", title: "Electric Vehicle Sales Surge to New Record", author: "Alex Thompson" },
-            { id: 9, category: "Health", title: "Mental Health Awareness Campaign Launches Globally", author: "Dr. Maya Patel" },
-            { id: 10, category: "Science", title: "Space Tourism Takes Off with New Private Mission", author: "Chris Roberts" }
-          ].map((news) => (
-            <Link key={news.id} className="group flex gap-4 pb-6 border-b border-border" to={`/article/${news.id}`}>
-              <div className="w-32 h-32 flex-shrink-0 bg-gray-200 rounded overflow-hidden">
-                <img src={`https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=200&h=200&fit=crop&seed=${news.id}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="" />
-              </div>
-              <div className="flex-1">
-                <span className="text-xs uppercase tracking-wider text-blue-600 mb-2 block">{news.category}</span>
-                <h3 className="text-lg mb-2 group-hover:text-blue-600 transition-colors leading-snug">{news.title}</h3>
-                <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                  <span>{news.author}</span><span>•</span><time>March 16, 2026</time>
+        <button onClick={() => scroll('right')} style={styles.scrollBtn}>❯</button>
+      </nav>
+
+      {/* 2. Header Tiêu đề */}
+      <div style={{ textAlign: 'center', margin: '40px 0' }}>
+        <h1 style={{ fontSize: '32px', color: '#333' }}>📰 Tin tức mới nhất</h1>
+        <p style={{ color: '#888' }}>Cập nhật kiến thức mỗi ngày</p>
+      </div>
+
+      {/* 3. Lưới bài viết */}
+      {loading ? (
+        <div style={{ textAlign: 'center', padding: '50px' }}>Đang tải bài viết... ⏳</div>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '30px' }}>
+          {posts.length === 0 ? (
+            <p style={{ textAlign: 'center', gridColumn: '1 / -1' }}>Chưa có bài viết nào.</p>
+          ) : (
+            posts.map(post => (
+              <div key={post._id} style={styles.postCard}>
+                <Link to={`/post/${post._id}`}>
+                  <img src={post.image || 'https://placehold.co/600x400'} alt={post.title} style={styles.postImg} />
+                </Link>
+                <div style={{ padding: '15px' }}>
+                  <span style={styles.catLabel}>{post.category?.name || 'Chung'}</span>
+                  <h3 style={styles.postTitle}>
+                    <Link to={`/post/${post._id}`} style={{ color: '#222', textDecoration: 'none' }}>{post.title}</Link>
+                  </h3>
+                  <p style={styles.summary}>{post.summary}</p>
                 </div>
               </div>
-            </Link>
-          ))}
+            ))
+          )}
         </div>
-      </section>
-    </main>
+      )}
+    </div>
   );
 }
+
+// 4. Định nghĩa Styles (Inline cho đơn giản, bạn có thể chuyển sang CSS file)
+const styles = {
+  navWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    borderBottom: '1px solid #ddd',
+    backgroundColor: '#fff',
+    position: 'sticky',
+    top: '0',
+    zIndex: 100,
+    padding: '0 10px'
+  },
+  categoryList: {
+    display: 'flex',
+    overflowX: 'auto',
+    listStyle: 'none',
+    margin: 0,
+    padding: '10px 0',
+    flex: 1,
+    scrollbarWidth: 'none', // Ẩn scrollbar trên Firefox
+    msOverflowStyle: 'none', // Ẩn scrollbar trên IE/Edge
+  },
+  // Lưu ý: Để ẩn hoàn toàn trên Chrome, bạn nên dùng CSS file với ::-webkit-scrollbar { display: none; }
+  navItem: {
+    whiteSpace: 'nowrap',
+    padding: '0 15px',
+    fontSize: '15px',
+    fontWeight: '500'
+  },
+  navLink: {
+    textDecoration: 'none',
+    color: '#444',
+    transition: 'color 0.2s',
+  },
+  navLinkActive: {
+    textDecoration: 'none',
+    color: '#9f224e', // Màu đỏ VnExpress
+    fontWeight: 'bold'
+  },
+  scrollBtn: {
+    background: 'none',
+    border: 'none',
+    fontSize: '20px',
+    cursor: 'pointer',
+    padding: '10px',
+    color: '#888'
+  },
+  postCard: {
+    backgroundColor: '#fff',
+    borderRadius: '8px',
+    overflow: 'hidden',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+  },
+  postImg: { width: '100%', height: '180px', objectFit: 'cover' },
+  catLabel: { fontSize: '11px', fontWeight: 'bold', color: '#9f224e', textTransform: 'uppercase' },
+  postTitle: { margin: '10px 0', fontSize: '18px', fontWeight: 'bold' },
+  summary: { 
+    fontSize: '14px', 
+    color: '#666', 
+    display: '-webkit-box', 
+    WebkitLineClamp: 2, 
+    WebkitBoxOrient: 'vertical', 
+    overflow: 'hidden' 
+  }
+};

@@ -1,3 +1,13 @@
+/* Ẩn thanh cuộn cho tất cả các danh sách ul (đặc biệt là thanh Category) */
+ul::-webkit-scrollbar {
+  display: none;
+}
+
+/* Đảm bảo danh sách có thể cuộn nhưng ẩn scrollbar trên Firefox và IE */
+ul {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
 .counter {
   font-size: 16px;
   padding: 5px 10px;
