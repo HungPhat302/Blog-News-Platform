@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { postApi } from '../../../api/post.api';
 import { useAuth } from '../../../context/AuthContext';
@@ -7,122 +7,213 @@ export default function PostList() {
   const { user } = useAuth();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState('all'); 
+  const [error, setError] = useState(null);
 
-  const fetchPosts = async () => {
+  const loadPosts = useCallback(async () => {
+    if (!user) return;
+
     try {
       setLoading(true);
-      let res;
-      
-      // 🛡️ BẢO MẬT: Nếu là Author, truyền ID vào API để chỉ lấy bài của chính mình!
-      if (user.role === 'author') {
-        const authorId = user._id || user.userId || user.id;
-        res = await postApi.getPosts({ author: authorId });
-      } else if (user.role === 'admin') {
-        // Admin lấy toàn bộ
-        res = await postApi.getPosts(); 
-      } else {
-        // Editor không dùng trang này nữa
-        return;
-      }
+      setError(null);
 
-      let allPosts = res.data || [];
-      if (statusFilter !== 'all') {
-        allPosts = allPosts.filter(p => p.status === statusFilter);
+      // Xây dựng query params dựa trên role
+      const params = {};
+      
+      // Nếu là author thì chỉ lấy bài viết của chính mình
+      if (user.role === 'author') {
+        params.author = user._id || user.userId || user.id;
       }
-      setPosts(allPosts);
-    } catch (error) {
-      console.error(error);
+      // Admin hoặc editor có thể xem tất cả (không cần truyền params)
+
+      const res = await postApi.getPosts(params);
+      
+      // Xử lý cả 2 dạng response phổ biến: { data: [...] } hoặc [...] trực tiếp
+      const postsData = res.data?.data || res.data || [];
+      setPosts(Array.isArray(postsData) ? postsData : []);
+
+    } catch (err) {
+      console.error("Lỗi khi tải danh sách bài viết:", err);
+      setError("Không thể tải danh sách bài viết. Vui lòng thử lại sau.");
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // Load dữ liệu khi component mount hoặc user thay đổi
   useEffect(() => {
-    if (['admin', 'author'].includes(user?.role)) {
-      fetchPosts();
-    }
-  }, [user.role, statusFilter]);
+    loadPosts();
+  }, [loadPosts]);
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Bạn có chắc chắn muốn xoá bài viết này?')) return;
+    if (!window.confirm("Bạn có chắc chắn muốn xóa bài viết này không?")) return;
+
     try {
       await postApi.deletePost(id);
-      alert('Đã xoá bài viết!');
-      fetchPosts(); 
-    } catch (error) { alert('Lỗi khi xoá!'); console.error(error); }
+      alert("Xóa bài viết thành công!");
+      await loadPosts(); // Refresh danh sách
+    } catch (error) {
+      console.error(error);
+      alert(error.response?.data?.message || "Không thể xóa bài viết. Vui lòng thử lại!");
+    }
   };
 
-  const handleSubmitReview = async (id) => {
-    try {
-      await postApi.submitToReview(id);
-      alert('Đã gửi chờ duyệt!');
-      fetchPosts();
-    } catch (error) { alert('Lỗi gửi duyệt'); console.error(error);}
+  const getStatusStyle = (status) => {
+    switch (status) {
+      case 'published':
+        return { bg: '#d4edda', color: '#155724', text: 'ĐÃ XUẤT BẢN' };
+      case 'review':
+        return { bg: '#fff3cd', color: '#856404', text: 'ĐANG DUYỆT' };
+      case 'draft':
+        return { bg: '#e9ecef', color: '#495057', text: 'BẢN NHÁP' };
+      default:
+        return { bg: '#e9ecef', color: '#495057', text: status?.toUpperCase() || 'UNKNOWN' };
+    }
   };
 
-  if (user?.role === 'editor') {
-    return <div style={{ padding: '30px', textAlign: 'center' }}>Vui lòng truy cập "Khu vực duyệt bài" trên thanh menu.</div>;
+  if (!user) {
+    return <div style={{ padding: '40px', textAlign: 'center' }}>Vui lòng đăng nhập để xem danh sách bài viết.</div>;
   }
 
   return (
-    <div style={{ backgroundColor: '#fff', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h2 style={{ margin: 0 }}>📝 {user.role === 'author' ? 'Bài viết của tôi' : 'Kho bài viết tổng'}</h2>
-        <Link to="/dashboard/posts/create" style={{ padding: '10px 15px', backgroundColor: '#007BFF', color: '#fff', border: 'none', borderRadius: '4px', fontWeight: 'bold', textDecoration: 'none' }}>+ Viết bài mới</Link>
+    <div style={{ padding: '20px' }}>
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        marginBottom: '30px' 
+      }}>
+        <h2 style={{ margin: 0 }}>
+          📝 Quản lý bài viết 
+          {user.role === 'author' && ' (Của tôi)'}
+        </h2>
+        
+        <Link 
+          to="/dashboard/posts/create" 
+          style={{
+            textDecoration: 'none',
+            backgroundColor: '#007bff',
+            color: '#fff',
+            padding: '12px 24px',
+            borderRadius: '6px',
+            fontWeight: '600',
+            boxShadow: '0 2px 6px rgba(0,123,255,0.25)',
+            transition: 'all 0.2s'
+          }}
+        >
+          + Viết bài mới
+        </Link>
       </div>
 
-      <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '6px', border: '1px solid #e9ecef', display: 'flex', alignItems: 'center', gap: '15px' }}>
-        <label style={{ fontWeight: 'bold', color: '#495057' }}>🔍 Lọc trạng thái:</label>
-        <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} style={{ padding: '8px 12px', borderRadius: '4px', border: '1px solid #ccc', fontWeight: 'bold' }}>
-          <option value="all">📁 Tất cả</option>
-          <option value="draft">📝 Bản nháp</option>
-          <option value="review">⏳ Đang chờ duyệt</option>
-          <option value="published">✅ Đã xuất bản</option>
-        </select>
-      </div>
+      {error && (
+        <div style={{
+          backgroundColor: '#f8d7da',
+          color: '#721c24',
+          padding: '15px',
+          borderRadius: '6px',
+          marginBottom: '20px'
+        }}>
+          {error}
+        </div>
+      )}
 
-      {loading ? ( <div style={{ textAlign: 'center', padding: '30px' }}>Đang tải... ⏳</div> ) : (
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+      {loading ? (
+        <div style={{ 
+          textAlign: 'center', 
+          padding: '80px 20px', 
+          color: '#666',
+          fontSize: '16px'
+        }}>
+          Đang tải bài viết... ⏳
+        </div>
+      ) : (
+        <div style={{ 
+          backgroundColor: '#fff', 
+          borderRadius: '12px', 
+          boxShadow: '0 4px 15px rgba(0,0,0,0.06)',
+          overflow: 'hidden'
+        }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
-              <tr style={{ backgroundColor: '#f8f9fa', borderBottom: '2px solid #dee2e6' }}>
-                <th style={{ padding: '12px' }}>Tiêu đề</th>
-                {user.role === 'admin' && <th style={{ padding: '12px' }}>Tác giả</th>}
-                <th style={{ padding: '12px' }}>Trạng thái</th>
-                <th style={{ padding: '12px', textAlign: 'center' }}>Thao tác</th>
+              <tr style={{ background: '#f8f9fa', borderBottom: '2px solid #dee2e6' }}>
+                <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600' }}>Tiêu đề</th>
+                <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600' }}>Trạng thái</th>
+                <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600' }}>Ngày tạo</th>
+                <th style={{ padding: '16px', textAlign: 'center', fontWeight: '600' }}>Thao tác</th>
               </tr>
             </thead>
             <tbody>
-              {posts.length === 0 ? (
-                <tr><td colSpan="4" style={{ textAlign: 'center', padding: '30px' }}>Không có bài viết nào.</td></tr>
+              {posts.length > 0 ? (
+                posts.map((post) => {
+                  const statusStyle = getStatusStyle(post.status);
+                  return (
+                    <tr key={post._id} style={{ borderBottom: '1px solid #f0f0f0' }}>
+                      <td style={{ padding: '16px', fontWeight: '500', color: '#212529' }}>
+                        {post.title}
+                      </td>
+                      <td style={{ padding: '16px' }}>
+                        <span style={{
+                          padding: '6px 14px',
+                          borderRadius: '20px',
+                          fontSize: '13px',
+                          fontWeight: '600',
+                          backgroundColor: statusStyle.bg,
+                          color: statusStyle.color,
+                        }}>
+                          {statusStyle.text}
+                        </span>
+                      </td>
+                      <td style={{ padding: '16px', color: '#6c757d', fontSize: '14px' }}>
+                        {new Date(post.createdAt).toLocaleDateString('vi-VN', {
+                          year: 'numeric',
+                          month: '2-digit',
+                          day: '2-digit',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </td>
+                      <td style={{ padding: '16px', textAlign: 'center' }}>
+                        <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
+                          <Link 
+                            to={`/dashboard/posts/edit/${post._id}`}
+                            style={{ 
+                              color: '#007bff', 
+                              textDecoration: 'none', 
+                              fontWeight: '600',
+                              fontSize: '14px'
+                            }}
+                          >
+                            ✏️ Sửa
+                          </Link>
+                          <button 
+                            onClick={() => handleDelete(post._id)}
+                            style={{
+                              background: 'none',
+                              border: 'none',
+                              color: '#dc3545',
+                              cursor: 'pointer',
+                              fontWeight: '600',
+                              fontSize: '14px',
+                              padding: 0
+                            }}
+                          >
+                            🗑️ Xóa
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
               ) : (
-                posts.map((post) => (
-                  <tr key={post._id} style={{ borderBottom: '1px solid #dee2e6' }}>
-                    <td style={{ padding: '12px', maxWidth: '300px', fontWeight: 'bold' }}>{post.title}</td>
-                    {user.role === 'admin' && <td style={{ padding: '12px' }}>{post.author?.username || 'Ẩn danh'}</td>}
-                    
-                    <td style={{ padding: '12px' }}>
-                      <span style={{ padding: '5px 10px', borderRadius: '20px', fontSize: '12px', backgroundColor: post.status === 'published' ? '#d4edda' : post.status === 'review' ? '#fff3cd' : '#e2e3e5', color: post.status === 'published' ? '#155724' : post.status === 'review' ? '#856404' : '#383d41', fontWeight: 'bold' }}>
-                        {post.status === 'published' ? 'Đã xuất bản' : post.status === 'review' ? 'Chờ duyệt' : 'Bản nháp'}
-                      </span>
-                    </td>
-                    
-                    <td style={{ padding: '12px', textAlign: 'center' }}>
-                      <div style={{ display: 'flex', gap: '5px', justifyContent: 'center' }}>
-                        <Link to={`/post/${post._id}`} style={{ padding: '6px 10px', backgroundColor: '#17a2b8', color: '#fff', textDecoration: 'none', borderRadius: '4px', fontSize: '13px', fontWeight: 'bold' }}>Xem</Link>
-
-                        {user.role === 'author' && post.status === 'draft' && (
-                          <button onClick={() => handleSubmitReview(post._id)} style={{ padding: '6px 10px', backgroundColor: '#ffc107', color: '#333', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '13px', fontWeight: 'bold' }}>Gửi duyệt</button>
-                        )}
-
-                        <Link to={`/dashboard/posts/edit/${post._id}`} style={{ padding: '6px 10px', backgroundColor: '#6c757d', color: '#fff', textDecoration: 'none', borderRadius: '4px', fontSize: '13px', fontWeight: 'bold' }}>Sửa</Link>
-                        <button onClick={() => handleDelete(post._id)} style={{ padding: '6px 10px', backgroundColor: '#dc3545', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '13px', fontWeight: 'bold' }}>Xoá</button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
+                <tr>
+                  <td colSpan="4" style={{ 
+                    padding: '60px', 
+                    textAlign: 'center', 
+                    color: '#999',
+                    fontSize: '16px'
+                  }}>
+                    Chưa có bài viết nào. Hãy tạo bài viết mới!
+                  </td>
+                </tr>
               )}
             </tbody>
           </table>

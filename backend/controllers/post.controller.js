@@ -13,7 +13,6 @@ exports.getPosts = async (req, res) => {
             limit = 10,
             sortBy = "createdAt",
             order = "desc",
-            status,
             author,
             fromDate,
             toDate
@@ -23,11 +22,9 @@ exports.getPosts = async (req, res) => {
         const skip = (page - 1) * limit;
         
         // 3. Build filter object
-        let filter = {};
-
-        if (status) {
-            filter.status = status;
-        }
+        let filter = {
+            status: "published"
+        };
 
         if (author) {
             filter.author = author;
@@ -44,7 +41,7 @@ exports.getPosts = async (req, res) => {
             [sortBy]: order === "desc" ? -1 : 1
         };
 
-        const posts = await Post.find().sort(sortOption).skip(skip).limit(parseInt(limit));
+        const posts = await Post.find(filter).sort(sortOption).skip(skip).limit(parseInt(limit));
 
         return res.status(200).json({
             message: "Successfully to get posts",
@@ -163,9 +160,17 @@ exports.getPostByKeyword = async (req, res) => {
 exports.createPost = async (req, res) => {
     try {
 
-        const { title, summary, content, category, tags, author} = req.body;
+        const { title, summary, content, category, tags } = req.body;
+
+        const userid = req.user.userId;
 
         let slug = await GenerateSlug.generateSlug(title);
+
+        if (tags) {
+            if (!Array.isArray(tags)) {
+                tags = [tags];
+            }
+        }
 
         if (!slug) {
             return res.status(500).json({
@@ -177,8 +182,8 @@ exports.createPost = async (req, res) => {
 
         const imageurl = req.file ? req.file.path : null;
 
-        if(!title || !content || !author) {
-            res.status(400).json({
+        if(!title || !content) {
+            return res.status(400).json({
                 message: "Doesn't enough data to create post"
             });
         }
@@ -191,7 +196,7 @@ exports.createPost = async (req, res) => {
             slug,
             category,
             tags,
-            author,
+            author: userid,
             image: imageurl
         });
 
@@ -202,6 +207,7 @@ exports.createPost = async (req, res) => {
             data: post
         });
     } catch(error) {
+        console.log(error);
         res.status(500).json({
             message: "Internal server error"
         });
@@ -212,7 +218,7 @@ exports.createPost = async (req, res) => {
 exports.updatePost = async (req, res) => {
     try {
         const { id } = req.params;
-        let { title, summary, content, category, tags, author } = req.body;
+        let { title, summary, content, category, tags } = req.body;
         let image;
         let slug;
 
@@ -234,8 +240,7 @@ exports.updatePost = async (req, res) => {
             content_markdown: content,
             content_html: cleanHtml,
             category,
-            tags,
-            author
+            tags
         };
 
         if (slug) {
@@ -247,7 +252,7 @@ exports.updatePost = async (req, res) => {
             updateData.image = req.file.path;
         }
 
-        if (!title && !content && !author && !category && !image) {
+        if (!title && !content && !category && !image) {
             return res.status(400).json({
                 message: "Doesn't have any data to update"
             });

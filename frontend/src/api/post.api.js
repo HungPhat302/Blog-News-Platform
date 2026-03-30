@@ -2,17 +2,21 @@ import axiosClient from './axiosClient';
 
 export const postApi = {
   // ... các API public và author giữ nguyên ...
-  getPosts: (params) => axiosClient.get('/posts', { params }), 
-  getDetailPost: (id) => axiosClient.get(`/posts/${id}`), 
+  getPosts: (params) => axiosClient.get('/posts', { params }),
+  getDetailPost: (id) => axiosClient.get(`/posts/${id}`),
   searchByKeyword: (keyword) => axiosClient.get(`/posts/search/${keyword}`),
   searchByCategory: (categorySlug) => axiosClient.get(`/posts/category/${categorySlug}`),
   searchByTag: (tagSlug) => axiosClient.get(`/posts/tag/${tagSlug}`),
 
-  createPost: (data) => axiosClient.post('/posts', data),
+  createPost: (data) => axiosClient.post('/posts', data, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
 
   createPostByAuthor: (data) => axiosClient.post('/posts', data), 
   createPostByAdmin: (data) => axiosClient.post('/posts', data), 
-  updatePost: (id, data) => axiosClient.put(`/posts/${id}`, data),
+  updatePost: (id, data) => axiosClient.put(`/posts/${id}`, data, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
   deletePost: (id) => axiosClient.delete(`/posts/${id}`),
 
   submitToReview: (id) => axiosClient.put(`/user/me/${id}`), 

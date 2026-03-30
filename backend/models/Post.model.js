@@ -45,8 +45,9 @@ const postSchema = new mongoose.Schema(
             default: "draft"
         },
         author: {
-            type: String, 
-            required: true,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true
         },
         publishdate: {
             type: Date,
